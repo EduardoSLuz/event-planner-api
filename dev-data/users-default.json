@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "1",
+    "firstName": "Fulano",
+    "lastName": "De Tal",
+    "birthDate": "2003-01-26",
+    "city": "Campo Grande",
+    "country": "Brasil",
+    "email": "fulanodetal@gmail.com",
+    "password": "123456",
+    "confirmPassword": "123456"
+  },
+  {
+    "_id": "2",
+    "firstName": "Fulano",
+    "lastName": "De Tal",
+    "birthDate": "2003-01-26",
+    "city": "Campo Grande",
+    "country": "Brasil",
+    "email": "fulanodetal2@gmail.com",
+    "password": "1234567",
+    "confirmPassword": "1234567"
+  }
+]

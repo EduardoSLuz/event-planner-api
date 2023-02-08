@@ -1,14 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
 
-// Routes
+// Adding Routes Require
 const eventRouter = require('./routes/eventRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
 const baseRoute = '/api/v1';
 
-// MIDDLEWARES
+// Middlewares
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }

@@ -7,7 +7,7 @@ REST API developed for CompassUOL's Node JS internship, its objective is to prov
 Clone the project to a folder on your device or download a zipped copy and then unzip it to your device folder.
 
 ```
-git clone "url"
+git clone https://github.com/EduardoSLuz/api-planner.git
 ```
 
 In the project folder, open a terminal and run the following command:

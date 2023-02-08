@@ -3,7 +3,7 @@ const eventController = require('../controllers/eventController');
 
 const router = express.Router();
 
-router.param('id', eventController.checkID);
+// router.param('id', eventController.checkID);
 
 router
   .route('/events')
@@ -13,7 +13,7 @@ router
 router
   .route('/events/:id')
   .get(eventController.getEventsByWeekId)
-  .delete(eventController.deleteEventsByWeek);
+  .delete(eventController.deleteEventsByDayWeek);
 
 router.route('/event/:id').delete(eventController.deleteEventById);
 
