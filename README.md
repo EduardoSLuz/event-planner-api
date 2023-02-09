@@ -32,28 +32,30 @@ If the terminal does not show any errors, then the API is ready to be used .
 
 It is recommended to use [POSTSMAN](https://www.postman.com) to perform the requests.
 
-Agora no POSTMAN, utilize "[http://localhost:8000](http://localhost:8000) + /api/v1 + url" para realizar as requisições, URLs disponiveis para o acesso:
+Now in POSTMAN, use "[http://localhost:8000](http://localhost:8000) + route" para realizar as requisições, to perform the requests, see the available routes below.
 
-## Events URLs
+## Event Routes
 
-### Get all events
-
-```
-GET localhost:8000/api/v1/events
-```
-
-### Get events by weekday or id
-
-_example: 1 for id or "saturday" for weekday - no quotes and no braces_
+### GET All events
 
 ```
-GET localhost:8000/api/v1/events/{id or weekday}
+localhost:8000/api/v1/events
 ```
 
-### Post create event
+### GET Events by weekday or id
+
+_Example:
+Any positive number >= "1" for id: "/events/1"
+Or any weekday as "saturday" for weekday: "/events/saturday" - no quotes, no braces e and all in lowercase_
 
 ```
-POST localhost:8000/api/v1/events
+localhost:8000/api/v1/events/{id or weekday}
+```
+
+### POST Create event
+
+```
+localhost:8000/api/v1/events
 ```
 
 Example request body:
@@ -66,24 +68,24 @@ Example request body:
 }
 ```
 
-### Delete event by id
+### DELETE Event by id
 
 ```
-DELETE localhost:8000/api/v1/event/{id}
+localhost:8000/api/v1/event/{id}
 ```
 
-### Delete events by weekday
+### DELETE events by weekday
 
 ```
-DELETE localhost:8000/api/v1/events/{weekday}
+localhost:8000/api/v1/events/{weekday}
 ```
 
-## Users URLs
+## User Routes
 
-### SignUp user
+### POST SignUp user
 
 ```
-POST localhost:8000/api/v1/users/signUp
+localhost:8000/api/v1/users/signUp
 ```
 
 Example request body:
@@ -95,10 +97,10 @@ Example request body:
 }
 ```
 
-### SignIn user
+### POST SignIn user
 
 ```
-POST localhost:8000/api/v1/users/signIn
+localhost:8000/api/v1/users/signIn
 ```
 
 Example request body:
@@ -116,4 +118,4 @@ Example request body:
 }
 ```
 
-## BONUS [TO DO]
+## BONUS 🛠️

@@ -1,31 +1,29 @@
 {
   "name": "api-planner",
   "version": "1.0.0",
-  "description": "Planner api project for events registration and control, requested by CompassUOL as an internship project for evaluation and development",
-  "main": "app.js",
+  "description": "REST API developed for CompassUOL's Node JS internship, its objective is to provide routes for managing and controlling events, login and user registration.",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "tsc & nodemon dist/server.js",
+    "build": "npx tsc"
   },
-  "author": "Eduardo Santos Luz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduardoSLuz/api-planner.git"
+  },
+  "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduardoSLuz/api-planner/issues"
+  },
+  "homepage": "https://github.com/EduardoSLuz/api-planner#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "express": "4.18.2",
-    "morgan": "^1.10.0"
+    "express": "^4.18.2"
   },
   "devDependencies": {
-    "eslint": "^8.33.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.13.0",
     "nodemon": "^2.0.20",
-    "prettier": "^2.8.3"
-  },
-  "engines": {
-    "node": ">=8.3.0"
+    "ts-node": "^10.9.1"
   }
 }
