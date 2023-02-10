@@ -3,7 +3,6 @@
 
 # paths/files
 /dist
-/test
 package-test.json
 .eslintrc-test.json
 

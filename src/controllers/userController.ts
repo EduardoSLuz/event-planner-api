@@ -37,9 +37,7 @@ class UserController {
         message: 'Invalid Resquest!',
       });
 
-    // It's functional
-    /*
-    const emailExists = users.find((el) => el.email === data.email);
+    const emailExists = users.find((el: User) => el.email === data.email);
 
     if (emailExists)
       return res.status(404).json({
@@ -52,13 +50,23 @@ class UserController {
         status: 'Fail',
         message: 'ConfirmPassword is different from Password!',
       });
-    */
 
     const newId =
       users.length > 0 && users[users.length - 1]._id
         ? `${users[users.length - 1]._id * 1 + 1}`
         : '1';
-    const newUser = { _id: newId, ...data };
+
+    const newUser: User = {
+      _id: newId,
+      firstName: `${data.firstName}`,
+      lastName: `${data.lastName}`,
+      birthDate: `${data.birthDate}`,
+      city: `${data.city}`,
+      country: `${data.country}`,
+      email: `${data.email}`,
+      password: `${data.password}`,
+      confirmPassword: `${data.confirmPassword}`,
+    };
 
     users.push(newUser);
 
@@ -67,7 +75,7 @@ class UserController {
         status: 'OK',
         message: 'The user has been successfully registered!',
         data: {
-          event: newUser,
+          user: newUser,
         },
       });
     });
@@ -95,7 +103,7 @@ class UserController {
 
     return res.status(200).json({
       status: 'OK',
-      msg: 'The user has been successfully logged in!',
+      message: 'The user has been successfully logged in!',
       data: {
         user: userExist,
       },
