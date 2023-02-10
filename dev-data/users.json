@@ -20,16 +20,5 @@
     "email": "fulanodetal2@gmail.com",
     "password": "1234567",
     "confirmPassword": "1234567"
-  },
-  {
-    "_id": "3",
-    "firstName": "Fulano",
-    "lastName": "De Tal",
-    "birthDate": "2003-01-26",
-    "city": "Campo Grande",
-    "country": "Brasil",
-    "email": "fulanodetal2@gmail.com",
-    "password": "1234567",
-    "confirmPassword": "1234567"
   }
 ]

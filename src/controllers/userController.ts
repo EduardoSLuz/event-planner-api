@@ -1,6 +1,18 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 
+type User = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  city: string;
+  country: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const urlUsers = `${__dirname}/../../dev-data/users.json`;
 const users = JSON.parse(fs.readFileSync(urlUsers, 'utf8'));
 
@@ -50,7 +62,7 @@ class UserController {
 
     users.push(newUser);
 
-    fs.writeFile(urlUsers, JSON.stringify(users), (error) => {
+    fs.writeFile(urlUsers, JSON.stringify(users), () => {
       return res.status(201).json({
         status: 'OK',
         message: 'The user has been successfully registered!',
@@ -72,7 +84,7 @@ class UserController {
       });
 
     const userExist = users.find(
-      (el: any) => el.email === data.email && el.password === data.password
+      (el: User) => el.email === data.email && el.password === data.password
     );
 
     if (!userExist)

@@ -4,18 +4,14 @@ import { eventController } from '../controllers/eventController';
 const eventRouter: Router = Router();
 
 //Routes
-// router.param('id', eventController.checkID);
-
 eventRouter
-  .route('/events')
+  .route('/')
   .get(eventController.getAllEvents)
   .post(eventController.createEvent);
 
 eventRouter
-  .route('/events/:id')
-  .get(eventController.getEventsByWeekId)
-  .delete(eventController.deleteEventsByDayWeek);
-
-eventRouter.route('/event/:id').delete(eventController.deleteEventById);
+  .route('/:id')
+  .get(eventController.getEventsByIdOrWeekday)
+  .delete(eventController.deleteEventByIdOrWeekday);
 
 export { eventRouter };

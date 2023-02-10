@@ -1,7 +1,11 @@
 # dependencies
 /node_modules
+
+# paths/files
 /dist
+/test
 package-test.json
+.eslintrc-test.json
 
 # testing
 #/coverage

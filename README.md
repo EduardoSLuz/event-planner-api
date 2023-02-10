@@ -30,7 +30,7 @@ If the terminal does not show any errors, then the API is ready to be used .
 
 ## ☕ Using the Api Planner
 
-It is recommended to use [POSTSMAN](https://www.postman.com) to perform the requests.
+It is recommended to use [POSTMAN](https://www.postman.com) to perform the requests.
 
 Now in POSTMAN, use "[http://localhost:8000](http://localhost:8000) + route" para realizar as requisições, to perform the requests, see the available routes below.
 
@@ -44,9 +44,11 @@ localhost:8000/api/v1/events
 
 ### GET Events by weekday or id
 
-_Example:
+\_Example:
+
 Any positive number >= "1" for id: "/events/1"
-Or any weekday as "saturday" for weekday: "/events/saturday" - no quotes, no braces e and all in lowercase_
+
+Or any weekday as "saturday" for weekday: "/events/saturday" - no quotes, no braces e and all in lowercase\_
 
 ```
 localhost:8000/api/v1/events/{id or weekday}
@@ -71,10 +73,10 @@ Example request body:
 ### DELETE Event by id
 
 ```
-localhost:8000/api/v1/event/{id}
+localhost:8000/api/v1/events/{id}
 ```
 
-### DELETE events by weekday
+### DELETE Events by weekday
 
 ```
 localhost:8000/api/v1/events/{weekday}

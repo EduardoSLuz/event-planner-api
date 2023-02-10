@@ -1,6 +1,5 @@
 import express from 'express';
-// import morgan from 'morgan';
-// import dotenv from 'dotenv';
+import morgan from 'morgan';
 
 // Adding Routes
 import { userRouter } from './routes/userRoutes';
@@ -18,17 +17,15 @@ export class App {
 
   // Middlewares
   private middleware() {
-    // if (process.env.NODE_ENV === 'development') {
-    //   app.use(morgan('dev'));
-    // }
+    if (process.env.NODE_ENV === 'development') {
+      this.server.use(morgan('dev'));
+    }
     this.server.use(express.json());
   }
 
   // Main Routes
   private router() {
-    this.server.use(`${this.baseRoute}`, eventRouter);
+    this.server.use(`${this.baseRoute}/events`, eventRouter);
     this.server.use(`${this.baseRoute}/users`, userRouter);
-    // app.use(`${this.baseRoute}`, eventRouter);
-    // app.use(`${this.baseRoute}/users`, userRouter);
   }
 }
