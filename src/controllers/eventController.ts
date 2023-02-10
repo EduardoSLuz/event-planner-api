@@ -24,6 +24,13 @@ const weekDays = [
 class EventController {
   // GET ALL EVENTS
   public getAllEvents(req: Request, res: Response) {
+    if (events.length == 0) {
+      return res.status(404).json({
+        status: 'Fail',
+        message: 'No event found!',
+      });
+    }
+
     return res.status(200).json(events);
   }
 
@@ -44,7 +51,8 @@ class EventController {
       });
     }
 
-    if (fEvents.length > 0) return res.status(200).json(fEvents);
+    if (fEvents.length > 0)
+      return res.status(200).json(validation ? fEvents : fEvents[0]);
   }
 
   // POST CREATE EVENT
