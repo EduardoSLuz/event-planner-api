@@ -389,7 +389,7 @@
                             {
                               'schema':
                                 {
-                                  '$ref': '#/components/schemas/UserPostResponse',
+                                  '$ref': '#/components/schemas/UserLoginResponse',
                                 },
                             },
                         },
@@ -485,6 +485,17 @@
                   'confirmPassword': { 'type': 'string', 'format': '********' },
                 },
             },
+          'UserLogin':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  '_id': { 'type': 'string' },
+                  'firstName': { 'type': 'string' },
+                  'lastName': { 'type': 'string' },
+                  'email': { 'type': 'string' },
+                },
+            },
           'UserLoginRequest':
             {
               'type': 'object',
@@ -504,6 +515,18 @@
                     { 'type': 'string', 'format': 'yyyy-mm-ddTH:m:sZ' },
                   'data':
                     { '$ref': '#/components/schemas/UserPostResponse_data' },
+                },
+            },
+          'UserLoginResponse':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'status': { 'type': 'string' },
+                  'message':
+                    { 'type': 'string', 'format': 'yyyy-mm-ddTH:m:sZ' },
+                  'data':
+                    { '$ref': '#/components/schemas/UserLoginResponse_data' },
                 },
             },
           'Fail':
@@ -537,6 +560,18 @@
                     {
                       'type': 'array',
                       'items': { '$ref': '#/components/schemas/User' },
+                    },
+                },
+            },
+          'UserLoginResponse_data':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'user':
+                    {
+                      'type': 'array',
+                      'items': { '$ref': '#/components/schemas/UserLogin' },
                     },
                 },
             },

@@ -279,12 +279,7 @@ Example response:
       "_id": "2",
       "firstName": "username",
       "lastName": "lastname",
-      "birthDate": "2023-02-10",
-      "city": "Cirt",
-      "country": "Country",
-      "email": "email@email.com",
-      "password": "******",
-      "confirmPassword": "******"
+      "email": "email@email.com"
     }
   }
 }

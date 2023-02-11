@@ -105,6 +105,7 @@ class UserController {
       });
 
     const resUser = {
+      _id: userExist._id,
       firstName: userExist.firstName,
       lastName: userExist.lastName,
       email: userExist.email,
