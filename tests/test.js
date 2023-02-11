@@ -51,7 +51,7 @@ describe('Events', () => {
         .end((err, res) => {
           if (res.ok) {
             res.should.have.status(200);
-            res.body.should.be.a('array');
+            res.body.should.be.a('object');
           } else {
             res.should.have.status(404);
             res.body.should.be.a('object');

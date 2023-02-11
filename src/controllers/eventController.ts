@@ -78,7 +78,7 @@ class EventController {
       status: 'OK',
       message: 'The event has been successfully registered!',
       data: {
-        event: newEvent,
+        event: [newEvent],
       },
     });
   }

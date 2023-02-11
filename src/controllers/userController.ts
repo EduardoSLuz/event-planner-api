@@ -71,6 +71,9 @@ class UserController {
     users.push(newUser);
 
     fs.writeFile(urlUsers, JSON.stringify(users), () => {
+      newUser.password = '*******';
+      newUser.confirmPassword = newUser.password;
+
       return res.status(201).json({
         status: 'OK',
         message: 'The user has been successfully registered!',
@@ -101,11 +104,17 @@ class UserController {
         message: 'User Does Not Exist!',
       });
 
+    const resUser = {
+      firstName: userExist.firstName,
+      lastName: userExist.lastName,
+      email: userExist.email,
+    };
+
     return res.status(200).json({
       status: 'OK',
       message: 'The user has been successfully logged in!',
       data: {
-        user: userExist,
+        user: resUser,
       },
     });
   }
