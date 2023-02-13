@@ -305,7 +305,7 @@ To test all routes in the development environment itself, just start the API via
 npm start
 ```
 
-Then run the test command:
+Then open another terminal in the project and run test command:
 
 ```
 npm test
