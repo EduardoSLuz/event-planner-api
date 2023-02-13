@@ -65,7 +65,13 @@ class EventController extends Controller {
       events.length > 0 && events[events.length - 1]._id
         ? `${+events[events.length - 1]._id + 1}`
         : '1';
-    const newEvent = { _id: newId, ...data };
+
+    const newEvent = {
+      _id: newId,
+      description: data.description,
+      dateTime: data.dateTime,
+      createdAt: data.createdAt,
+    };
 
     events.push(newEvent);
     fs.writeFileSync(urlEvents, JSON.stringify(events));
