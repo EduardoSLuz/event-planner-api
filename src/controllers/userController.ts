@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import Controller from './controller';
+import { autobind } from './../utils/util';
 import fs from 'fs';
 
 type User = {
@@ -16,10 +18,11 @@ type User = {
 const urlUsers = `${__dirname}/../../dev-data/users.json`;
 const users = JSON.parse(fs.readFileSync(urlUsers, 'utf8'));
 
-class UserController {
+class UserController extends Controller {
   // POST USERS SIGN UP
+  @autobind
   public signUp(req: Request, res: Response) {
-    const data = Object.assign(req.body);
+    const data = this.validBody(req) ? Object.assign(req.body) : {};
 
     if (
       !data.firstName ||
@@ -29,27 +32,20 @@ class UserController {
       !data.country ||
       !data.email ||
       !data.password ||
-      !data.country ||
       !data.confirmPassword
-    )
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'Invalid Resquest!',
-      });
+    ) {
+      return this.sendError(res, 'Invalid Resquest!');
+    }
 
     const emailExists = users.find((el: User) => el.email === data.email);
 
-    if (emailExists)
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'Email Already Exists!',
-      });
+    if (emailExists) {
+      return this.sendError(res, 'Email Already Exists!');
+    }
 
-    if (data.password !== data.confirmPassword)
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'ConfirmPassword is different from Password!',
-      });
+    if (data.password !== data.confirmPassword) {
+      return this.sendError(res, 'ConfirmPassword is different from Password!');
+    }
 
     const newId =
       users.length > 0 && users[users.length - 1]._id
@@ -85,24 +81,21 @@ class UserController {
   }
 
   // POST USERS SIGN IN
+  @autobind
   public signIn(req: Request, res: Response) {
-    const data = Object.assign(req.body);
+    const data = this.validBody(req) ? Object.assign(req.body) : {};
 
-    if (!data.email || !data.password)
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'Invalid Resquest!',
-      });
+    if (!data.email || !data.password) {
+      return this.sendError(res, 'Invalid Resquest!');
+    }
 
     const userExist = users.find(
       (el: User) => el.email === data.email && el.password === data.password
     );
 
-    if (!userExist)
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'User Does Not Exist!',
-      });
+    if (!userExist) {
+      return this.sendError(res, 'User Does Not Exist!');
+    }
 
     const resUser = {
       _id: userExist._id,

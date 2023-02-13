@@ -296,12 +296,6 @@ In case of errors in the processing of data or in searches, the response will al
 }
 ```
 
-## 📁 Swagger Documetation
-
-This API also has a Swagger documentation, follow the link to access it
-
-[Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/Api-Planner/1.0.0);
-
 ## 🛠️ Testing API
 
 To test all routes in the development environment itself, just start the API via terminal in the project folder with the command:
@@ -335,3 +329,9 @@ Events
       ✔ Testing POST SignUp
       ✔ Testing POST SignIn
 ```
+
+## 📁 Swagger Documetation
+
+This API also has a Swagger documentation, follow the link to access it
+
+[Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/Api-Planner/1.0.0);

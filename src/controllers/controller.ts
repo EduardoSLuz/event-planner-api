@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 
-export class Controller {
-  public validBody(req: Request, res: Response) {
+export default class Controller {
+  public validBody(req: Request) {
     try {
       Object.assign(req.body);
+      return true;
     } catch (err) {
-      return this.sendError(res, 'Body Error', 'Error');
+      return false;
     }
   }
 

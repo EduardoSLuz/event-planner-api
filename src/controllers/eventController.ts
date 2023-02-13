@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import Controller from './controller';
+import { autobind } from './../utils/util';
 import fs from 'fs';
 
 type Event = {
@@ -21,20 +23,19 @@ const weekDays = [
   { name: 'saturday', val: '6' },
 ];
 
-class EventController {
+class EventController extends Controller {
   // GET ALL EVENTS
+  @autobind
   public getAllEvents(req: Request, res: Response) {
     if (events.length == 0) {
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'No event found!',
-      });
+      return this.sendError(res, 'No event found!');
     }
 
     return res.status(200).json(events);
   }
 
   // GET EVENTS BY WEEKDAY OR ID
+  @autobind
   public getEventsByIdOrWeekday(req: Request, res: Response) {
     const { id } = req.params;
     const day = weekDays.find((el) => el.name === id);
@@ -45,25 +46,20 @@ class EventController {
     );
 
     if (fEvents.length === 0) {
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'No event found!',
-      });
+      return this.sendError(res, 'No event found!');
     }
 
-    if (fEvents.length > 0)
-      return res.status(200).json(validation ? fEvents : fEvents[0]);
+    return res.status(200).json(validation ? fEvents : fEvents[0]);
   }
 
   // POST CREATE EVENT
+  @autobind
   public createEvent(req: Request, res: Response) {
-    const data = Object.assign(req.body);
+    const data = this.validBody(req) ? Object.assign(req.body) : {};
 
-    if (!data.description || !data.dateTime || !data.createdAt)
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'Invalid Resquest!',
-      });
+    if (!data.description || !data.dateTime || !data.createdAt) {
+      return this.sendError(res, 'Invalid Resquest!');
+    }
 
     const newId =
       events.length > 0 && events[events.length - 1]._id
@@ -84,6 +80,7 @@ class EventController {
   }
 
   // DELETE EVENT BY ID OR DAYWEEK
+  @autobind
   public deleteEventByIdOrWeekday(req: Request, res: Response) {
     const { id } = req.params;
     const day = weekDays.find((el) => el.name === id);
@@ -97,10 +94,7 @@ class EventController {
     );
 
     if (delEvents.length === 0) {
-      return res.status(404).json({
-        status: 'Fail',
-        message: 'No event found!',
-      });
+      return this.sendError(res, 'No event found!');
     }
 
     events = [...newEvents];
@@ -115,11 +109,5 @@ class EventController {
     });
   }
 }
-
-// export const checkID: RequestHandler = (req, res, next, val) => {
-//   console.log(`Event id is: ${val}`);
-
-//   next();
-// };
 
 export const eventController = new EventController();
