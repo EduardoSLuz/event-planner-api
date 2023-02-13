@@ -8,6 +8,7 @@ REST API developed for CompassUOL's Node JS internship, its objective is to prov
 
 Para instalar a projeto e rodar a API, you must have installed on your device:
 
+- [Git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org)
 - [Postman](https://www.postman.com)
 - [VSCode](https://code.visualstudio.com) (Optional)
