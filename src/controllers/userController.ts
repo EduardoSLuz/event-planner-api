@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Request, Response } from 'express';
 import Controller from './controller';
 import { autobind } from './../utils/util';
@@ -112,38 +113,39 @@ class UserController extends Controller {
     }); */
   }
 
-  // POST USERS SIGN IN
-  /* @autobind */
-  /* public signIn(req: Request, res: Response) {
+  @autobind
+  public async signIn(req: Request, res: Response) {
     const data = this.validBody(req) ? Object.assign(req.body) : {};
 
     if (!data.email || !data.password) {
-      return this.sendError(res, 'Invalid Resquest!');
+      return this.sendError(
+        res,
+        'Invalid Resquest! Expected fields: email password'
+      );
     }
 
-    const userExist = users.find(
-      (el: User) => el.email === data.email && el.password === data.password
+    const userExist = await userModel.find(
+      {
+        email: data.email,
+      },
+      'email password'
     );
-
-    if (!userExist) {
+    if (userExist.length == 0) {
       return this.sendError(res, 'User Does Not Exist!');
     }
 
-    const resUser = {
-      _id: userExist._id,
-      firstName: userExist.firstName,
-      lastName: userExist.lastName,
-      email: userExist.email,
-    };
+    if (data.password != userExist[0].password) {
+      return this.sendError(res, 'Password incorrect');
+    }
 
     return res.status(200).json({
       status: 'OK',
       message: 'The user has been successfully logged in!',
       data: {
-        user: resUser,
+        user: 'OK',
       },
     });
-  } */
+  }
 }
 
 export const userController = new UserController();

@@ -9,6 +9,6 @@ const userRouter: Router = Router();
 
 userRouter.route('/signUp').post(userController.signUp);
 
-/* userRouter.route('/signIn').post(userController.signIn); */
+userRouter.route('/signIn').post(userController.signIn);
 
 export { userRouter };
