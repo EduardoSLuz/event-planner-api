@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import express from 'express';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 // Adding Routes
 import { userRouter } from './routes/userRoutes';
@@ -27,5 +29,20 @@ export class App {
   private router() {
     this.server.use(`${this.baseRoute}/events`, eventRouter);
     this.server.use(`${this.baseRoute}/users`, userRouter);
+  }
+
+  private connectionDB() {
+    mongoose
+      .connect(
+        `mongodb+srv://${process.env.USERNAME}:${process.env.PASSWORD}@cluster0.18t8xvs.mongodb.net/test`
+      )
+      .then(() => {
+        // Success message
+        console.log(`Connect DB with ${process.env.USERNAME} has user`);
+      })
+      .catch((err) => {
+        // Fail message
+        console.error(`Database connection error: ${err.message}`);
+      });
   }
 }
