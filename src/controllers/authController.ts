@@ -19,9 +19,8 @@ class authController extends Controller {
     };
 
     res.cookie('jwt', token, cookieOptions);
-
     res.status(statusCode).json({
-      status: 'success',
+      status: 'Success token generate',
       data: {
         user,
       },
@@ -32,7 +31,7 @@ class authController extends Controller {
   public protect(req: any, res: any, next: any) {
     let token;
     if (req.headers.cookie) {
-      token = req.headers.cookie.substring(4);
+      token = req.headers.cookie.split('=')[1];
     }
     if (!token) {
       return next(

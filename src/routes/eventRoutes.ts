@@ -8,7 +8,7 @@ const eventRouter: Router = Router();
 //Routes
 eventRouter
   .route('/')
-  .get(authcontroller.protect, catchAsync(eventController.getAllEvents))
+  .get(authcontroller.protect, eventController.getAllEvents)
   .post(catchAsync(eventController.createEvent));
 
 eventRouter

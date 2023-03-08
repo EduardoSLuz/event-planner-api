@@ -96,7 +96,7 @@ class UserController extends Controller {
     authcontroller.createSendToken(user, 200, res);
   }
 
-  public async logout(req: Request, res: Response) {
+  public async logout(_: Request, res: Response) {
     res.clearCookie('jwt');
     return res.send({
       status: res.status,

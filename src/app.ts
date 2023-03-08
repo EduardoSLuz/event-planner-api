@@ -2,6 +2,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import AppError from './utils/appError';
+// Controller
 import globalErrorHandler from './controllers/errorController';
 // Adding Routes
 import { userRouter } from './routes/userRoutes';
