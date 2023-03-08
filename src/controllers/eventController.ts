@@ -25,35 +25,40 @@ const weekDays = [
 ];
 
 class EventController extends Controller {
-  // GET ALL EVENTS
+  // Get all events or events of the day of week passed by query (if the user insert a day of the week in the query)
   @autobind
-  public getAllEvents(req: Request, res: Response) {
-    if (events.length == 0) {
-      return this.sendError(res, 'No event found!');
-    }
+  public getEvents(req: Request, res: Response) {
+    let results;
+    if (Object.keys(req.query).length !== 0) {
+      results = eventModel.find({ dayOfWeek: req.query.dayOfWeek });
+    } else {
+      results = eventModel.find({});
+      console.log(results);
 
+      if (!results) {
+        return this.sendError(res, 'No event found!');
+      }
+    }
     return res.status(200).json({
-      events: events,
+      events: 'OK',
       token: req.headers.cookie,
     });
   }
 
-  // GET EVENTS BY WEEKDAY OR ID
+  // Get event by id
   @autobind
-  public getEventsByIdOrWeekday(req: Request, res: Response) {
-    const { id } = req.params;
-    const day = weekDays.find((el) => el.name === id);
-    const validation = !+id && day?.val;
-
-    const fEvents = events.filter((el: Event) =>
-      validation ? new Date(el.dateTime).getDay() === +day.val : el._id === id
-    );
-
-    if (fEvents.length === 0) {
+  public getEvent(req: Request, res: Response) {
+    let results;
+    if (Number.isNaN(req.params.id)) {
+      const { id } = req.params;
+      results = eventModel.find({ _id: id });
+      console.log(results);
+    } else {
       return this.sendError(res, 'No event found!');
     }
-
-    return res.status(200).json(validation ? fEvents : fEvents[0]);
+    return res.status(200).json({
+      event: 'OK',
+    });
   }
 
   // POST CREATE EVENT
