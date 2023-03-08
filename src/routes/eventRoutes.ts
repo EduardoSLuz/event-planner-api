@@ -8,12 +8,12 @@ const eventRouter: Router = Router();
 //Routes
 eventRouter
   .route('/')
-  .get(authcontroller.protect, eventController.getAllEvents)
+  .get(authcontroller.protect, eventController.getEvents)
   .post(catchAsync(eventController.createEvent));
 
 eventRouter
   .route('/:id')
-  .get(eventController.getEventsByIdOrWeekday)
+  .get(eventController.getEvent)
   .delete(eventController.deleteEventByIdOrWeekday);
 
 export { eventRouter };
