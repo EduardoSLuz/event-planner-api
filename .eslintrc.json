@@ -41,6 +41,10 @@
     "no-unused-vars": [
       "error",
       { "argsIgnorePattern": "req|res|next|val|error" }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "req|res|next|val|error" }
     ]
   }
 }

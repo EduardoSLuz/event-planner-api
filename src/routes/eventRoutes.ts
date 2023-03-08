@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { eventController } from '../controllers/eventController';
-('../controllers/eventController');
+import catchAsync from '../utils/catchAsync';
 
 const eventRouter: Router = Router();
 
@@ -8,7 +8,7 @@ const eventRouter: Router = Router();
 eventRouter
   .route('/')
   .get(eventController.getAllEvents)
-  .post(eventController.createEvent);
+  .post(catchAsync(eventController.createEvent));
 
 eventRouter
   .route('/:id')

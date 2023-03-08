@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EduardoSLuz/api-planner.git"
+    "url": "git+https://github.com/EduardoSLuz/event-planner-api.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EduardoSLuz/api-planner/issues"
+    "url": "https://github.com/EduardoSLuz/event-planner-api/issues"
   },
-  "homepage": "https://github.com/EduardoSLuz/api-planner#readme",
+  "homepage": "https://github.com/EduardoSLuz/event-planner-api#readme",
   "dependencies": {
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

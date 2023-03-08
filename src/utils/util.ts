@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // autobind decorator
 export const autobind = (
   _: any,

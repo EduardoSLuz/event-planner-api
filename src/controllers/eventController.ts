@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Controller from './controller';
-import { autobind } from './../utils/util';
+import { autobind } from '../utils/util';
+import eventModel from '../models/Events';
 import fs from 'fs';
 
 type Event = {
@@ -54,33 +55,18 @@ class EventController extends Controller {
 
   // POST CREATE EVENT
   @autobind
-  public createEvent(req: Request, res: Response) {
-    const data = this.validBody(req) ? Object.assign(req.body) : {};
-
-    if (!data.description || !data.dateTime || !data.createdAt) {
-      return this.sendError(res, 'Invalid Resquest!');
-    }
-
-    const newId =
-      events.length > 0 && events[events.length - 1]._id
-        ? `${+events[events.length - 1]._id + 1}`
-        : '1';
-
-    const newEvent = {
-      _id: newId,
-      description: data.description,
-      dateTime: data.dateTime,
-      createdAt: data.createdAt,
-    };
-
-    events.push(newEvent);
-    fs.writeFileSync(urlEvents, JSON.stringify(events));
+  public async createEvent(req: Request, res: Response, next: NextFunction) {
+    const event = await eventModel.create({
+      description: req.body.description,
+      dayOfWeek: req.body.dayOfWeek,
+      dateTime: req.body.dateTime,
+    });
 
     return res.status(201).json({
       status: 'OK',
       message: 'The event has been successfully registered!',
       data: {
-        event: [newEvent],
+        event,
       },
     });
   }
