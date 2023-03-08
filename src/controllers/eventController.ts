@@ -32,7 +32,10 @@ class EventController extends Controller {
       return this.sendError(res, 'No event found!');
     }
 
-    return res.status(200).json(events);
+    return res.status(200).json({
+      events: events,
+      token: req.headers.cookie,
+    });
   }
 
   // GET EVENTS BY WEEKDAY OR ID

@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
   },
-  confirmPassword: {
-    type: String,
-    required: [true, 'Confirm Password is required'],
-  },
 });
 
 // Export Schema to create a Model

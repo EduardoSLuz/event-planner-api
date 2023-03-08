@@ -1,149 +1,106 @@
-/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import Controller from './controller';
 import { autobind } from './../utils/util';
 import userModel from '../models/Users';
-/* import fs from 'fs'; */
-
-/* 
-  Não precisa mais porque ele vai comparar com o modelo que está no Schema do BD
-  type User = {
-    _id: string; 
-    firstName: string;
-    lastName: string;
-    birthDate: string;
-    city: string;
-    country: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  };
-  const urlUsers = `${__dirname}/../../dev-data/users.json`;
-  Não precisa mais porque os documentos serão salvos remotamente
-  const users = JSON.parse(fs.readFileSync(urlUsers, 'utf8'));
-  */
+import { authcontroller } from './authController';
+import bcrypt from 'bcrypt';
 
 class UserController extends Controller {
-  // POST USERS SIGN UP
   @autobind
-  public signUp(req: Request, res: Response) {
+  public async signUp(req: Request, res: Response) {
     const data = this.validBody(req) ? Object.assign(req.body) : {};
+    const {
+      firstName,
+      lastName,
+      birthDate,
+      city,
+      country,
+      email,
+      password,
+      confirmPassword,
+    } = data;
     if (
-      !data.firstName ||
-      !data.lastName ||
-      !data.birthDate ||
-      !data.city ||
-      !data.country ||
-      !data.email ||
-      !data.password ||
-      !data.confirmPassword
+      !firstName ||
+      !lastName ||
+      !birthDate ||
+      !city ||
+      !country ||
+      !email ||
+      !password ||
+      !confirmPassword
     ) {
-      return this.sendError(res, 'Invalid Resquest!');
+      return this.sendError(res, 'Invalid Resquest! Missing or invalid fields');
     }
-    const emailExists = userModel.find({ email: data.email });
-    if (!emailExists) {
+
+    const user = await userModel.findOne({ email });
+
+    if (user) {
       return this.sendError(res, 'Email Already Exists!');
     }
+
     if (data.password !== data.confirmPassword) {
-      return this.sendError(res, 'ConfirmPassword is different from Password!');
+      return this.sendError(
+        res,
+        'Confirm Password is different from Password!'
+      );
     }
 
-    //TODO: ...data
-    const user = new userModel({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      birthDate: req.body.birthDate,
-      city: req.body.city,
-      country: req.body.country,
-      email: req.body.email,
-      password: req.body.password,
-      confirmPassword: req.body.confirmPassword,
+    const criptoPassword = await bcrypt.hash(data.password, 14);
+
+    const newUser = new userModel({
+      firstName,
+      lastName,
+      birthDate,
+      city,
+      country,
+      email,
+      password: criptoPassword,
     });
-
-    user
-      .save()
-      .then(() => {
-        // Success message if all right
-        return res.send({
-          status: res.status,
-          message: 'The user has been successfully registered!',
-          data: {
-            user: data.firstName,
-          },
-        });
-      })
-      .catch(() => {
-        // Fail message if somenthing gone's wrong
-        return res.send({
-          status: res.status,
-          message: 'Error',
-        });
+    try {
+      userModel.create(newUser);
+      authcontroller.createSendToken(user, 201, res);
+    } catch (error) {
+      return res.send({
+        status: res.status,
+        message: 'Error in create a new user',
       });
-    /* 
-    Não é mais necessário, mongodb trabalha com ID automaticamente fornecido por ele
-    Não precisa mais porque os documentos serão salvos remotamente
-    
-    const newId =
-      users.length > 0 && users[users.length - 1]._id
-        ? `${users[users.length - 1]._id * 1 + 1}`
-        : '1';
-
-     const newUser: User = {
-      firstName: `${data.firstName}`,
-      lastName: `${data.lastName}`,
-      birthDate: `${data.birthDate}`,
-      city: `${data.city}`,
-      country: `${data.country}`,
-      email: `${data.email}`,
-      password: `${data.password}`,
-      confirmPassword: `${data.confirmPassword}`,
-    }; 
-      users.push(newUser);
-      fs.writeFile(urlUsers, JSON.stringify(users), () => {
-      newUser.password = '*******';
-      newUser.confirmPassword = newUser.password;
-
-      return res.status(201).json({
-        status: 'OK',
-        message: 'The user has been successfully registered!',
-        data: {
-          user: newUser,
-        },
-      });
-    }); */
+    }
   }
 
+  // POST USERS SIGN IN
   @autobind
   public async signIn(req: Request, res: Response) {
     const data = this.validBody(req) ? Object.assign(req.body) : {};
 
-    if (!data.email || !data.password) {
+    const { email, password } = data;
+
+    if (!email || !password) {
       return this.sendError(
         res,
-        'Invalid Resquest! Expected fields: email password'
+        'Invalid Resquest! Expected fields: Email and Password'
       );
     }
 
-    const userExist = await userModel.find(
-      {
-        email: data.email,
-      },
-      'email password'
-    );
-    if (userExist.length == 0) {
+    const user = await userModel.findOne({ email }, 'email password');
+
+    if (!user) {
       return this.sendError(res, 'User Does Not Exist!');
     }
+    const verifyPassword = await bcrypt.compare(password, user.password);
 
-    if (data.password != userExist[0].password) {
-      return this.sendError(res, 'Password incorrect');
+    if (!verifyPassword) {
+      return this.sendError(res, 'Password incorrect, try again');
     }
 
-    return res.status(200).json({
-      status: 'OK',
-      message: 'The user has been successfully logged in!',
-      data: {
-        user: 'OK',
-      },
+    authcontroller.createSendToken(user, 200, res);
+  }
+
+  public async logout(req: Request, res: Response) {
+    res.clearCookie('jwt');
+    return res.send({
+      status: res.status,
+      message: 'User Logged out',
     });
   }
 }

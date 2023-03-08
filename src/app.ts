@@ -3,7 +3,6 @@ import express from 'express';
 import morgan from 'morgan';
 import AppError from './utils/appError';
 import globalErrorHandler from './controllers/errorController';
-
 // Adding Routes
 import { userRouter } from './routes/userRoutes';
 import { eventRouter } from './routes/eventRoutes';
@@ -31,7 +30,7 @@ export class App {
     this.server.use(`${this.baseRoute}/events`, eventRouter);
     this.server.use(`${this.baseRoute}/users`, userRouter);
 
-    this.server.all('*', (req, res, next) => {
+    this.server.all('*', (req, _, next) => {
       next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
     });
 
