@@ -13,7 +13,7 @@ eventRouter
 
 eventRouter
   .route('/:id')
-  .get(eventController.getEvent)
-  .delete(eventController.deleteEventByIdOrWeekDay);
+  .get(authcontroller.protect, eventController.getEvent)
+  .delete(authcontroller.protect, eventController.deleteEventByIdOrWeekDay);
 
 export { eventRouter };
