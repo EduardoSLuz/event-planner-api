@@ -27,12 +27,12 @@ const weekDays = [
 class EventController extends Controller {
   // Get all events or events of the day of week passed by query (if the user insert a day of the week in the query)
   @autobind
-  public getEvents(req: Request, res: Response) {
+  public async getEvents(req: Request, res: Response) {
     let results;
     if (Object.keys(req.query).length !== 0) {
       results = eventModel.find({ dayOfWeek: req.query.dayOfWeek });
     } else {
-      results = eventModel.find({});
+      results = await eventModel.find({}, 'description dayOfWeek dateTime');
       console.log(results);
 
       if (!results) {
@@ -40,7 +40,7 @@ class EventController extends Controller {
       }
     }
     return res.status(200).json({
-      events: 'OK',
+      events: results,
       token: req.headers.cookie,
     });
   }
@@ -81,32 +81,12 @@ class EventController extends Controller {
 
   // DELETE EVENT BY ID OR DAYWEEK
   @autobind
-  public deleteEventByIdOrWeekday(req: Request, res: Response) {
+  async deleteEventByIdOrWeekDay(req: Request, res: Response) {
     const { id } = req.params;
-    const day = weekDays.find((el) => el.name === id);
-    const validation = !+id && day?.val;
-
-    const delEvents = events.filter((el: Event) =>
-      validation ? new Date(el.dateTime).getDay() === +day.val : el._id === id
-    );
-    const newEvents = events.filter((el: Event) =>
-      validation ? new Date(el.dateTime).getDay() !== +day.val : el._id !== id
-    );
-
-    if (delEvents.length === 0) {
-      return this.sendError(res, 'No event found!');
-    }
-
-    events = [...newEvents];
-    fs.writeFileSync(urlEvents, JSON.stringify(newEvents));
-
-    return res.status(200).json({
-      status: 'OK',
-      message: 'The event(s) has been successfully deleted!',
-      data: {
-        event: delEvents,
-      },
-    });
+    //console.log(req.params);
+    const results = eventModel.findByIdAndRemove({ _id: id });
+    console.log(results);
+    return res.status(200).json({ message: 'Event deleted' });
   }
 }
 
