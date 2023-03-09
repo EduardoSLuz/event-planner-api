@@ -3,27 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import Controller from './controller';
 import { autobind } from '../utils/util';
 import eventModel from '../models/Events';
-import fs from 'fs';
-
-type Event = {
-  _id: string;
-  description: string;
-  dateTime: string;
-  createdAt: string;
-};
-
-const urlEvents = `${__dirname}/../../dev-data/events.json`;
-const events: Event[] = JSON.parse(fs.readFileSync(urlEvents, 'utf8'));
-
-const weekDays = [
-  { name: 'sunday', val: '0' },
-  { name: 'monday', val: '1' },
-  { name: 'tuesday', val: '2' },
-  { name: 'wednesday', val: '3' },
-  { name: 'thursday', val: '4' },
-  { name: 'friday', val: '5' },
-  { name: 'saturday', val: '6' },
-];
 
 class EventController extends Controller {
   // Get all events or events of the day of week passed by query (if the user insert a day of the week in the query)
@@ -31,34 +10,36 @@ class EventController extends Controller {
   public async getEvents(req: Request, res: Response) {
     let results;
     if (Object.keys(req.query).length !== 0) {
-      results = eventModel.find({ dayOfWeek: req.query.dayOfWeek });
+      results = await eventModel.find(
+        { dayOfWeek: req.query.dayOfWeek },
+        'description dayOfWeek dateTime'
+      );
     } else {
       results = await eventModel.find({}, 'description dayOfWeek dateTime');
-      console.log(results);
-
+      /* console.log(results); */
       if (!results) {
         return this.sendError(res, 'No event found!');
       }
     }
     return res.status(200).json({
       events: results,
-      token: req.headers.cookie,
+      /* token: req.headers.cookie, */
     });
   }
 
   // Get event by id
   @autobind
-  public getEvent(req: Request, res: Response) {
-    let results;
-    if (Number.isNaN(req.params.id)) {
+  public async getEvent(req: Request, res: Response) {
+    let result;
+    if (req.params.id) {
       const { id } = req.params;
-      results = eventModel.find({ _id: id });
-      console.log(results);
+      result = await eventModel.find({ _id: id });
+      /* console.log(results); */
     } else {
       return this.sendError(res, 'No event found!');
     }
     return res.status(200).json({
-      event: 'OK',
+      event: result,
     });
   }
 
@@ -83,11 +64,19 @@ class EventController extends Controller {
   // DELETE EVENT BY ID OR DAYWEEK
   @autobind
   async deleteEventByIdOrWeekDay(req: Request, res: Response) {
-    const { id } = req.params;
-    //console.log(req.params);
-    const results = eventModel.findByIdAndRemove({ _id: id });
-    console.log(results);
-    return res.status(200).json({ message: 'Event deleted' });
+    let result;
+    if (req.params.id) {
+      const { id } = req.params;
+      //console.log(req.params);
+      result = await eventModel.findByIdAndRemove(id);
+      if (result == null) {
+        return this.sendError(res, 'No event with ID informed!');
+      }
+      /* console.log(result); */
+    } else {
+      return this.sendError(res, 'No ID informed!');
+    }
+    return res.status(200).json({ message: 'Event deleted', result });
   }
 }
 
