@@ -13,7 +13,7 @@ type Event = {
 };
 
 const urlEvents = `${__dirname}/../../dev-data/events.json`;
-let events: Event[] = JSON.parse(fs.readFileSync(urlEvents, 'utf8'));
+const events: Event[] = JSON.parse(fs.readFileSync(urlEvents, 'utf8'));
 
 const weekDays = [
   { name: 'sunday', val: '0' },
@@ -33,7 +33,7 @@ class EventController extends Controller {
     if (Object.keys(req.query).length !== 0) {
       results = eventModel.find({ dayOfWeek: req.query.dayOfWeek });
     } else {
-      results = await eventModel.find({});
+      results = await eventModel.find({}, 'description dayOfWeek dateTime');
       console.log(results);
 
       if (!results) {
@@ -82,32 +82,12 @@ class EventController extends Controller {
 
   // DELETE EVENT BY ID OR DAYWEEK
   @autobind
-  public deleteEventByIdOrWeekday(req: Request, res: Response) {
+  async deleteEventByIdOrWeekDay(req: Request, res: Response) {
     const { id } = req.params;
-    const day = weekDays.find((el) => el.name === id);
-    const validation = !+id && day?.val;
-
-    const delEvents = events.filter((el: Event) =>
-      validation ? new Date(el.dateTime).getDay() === +day.val : el._id === id
-    );
-    const newEvents = events.filter((el: Event) =>
-      validation ? new Date(el.dateTime).getDay() !== +day.val : el._id !== id
-    );
-
-    if (delEvents.length === 0) {
-      return this.sendError(res, 'No event found!');
-    }
-
-    events = [...newEvents];
-    fs.writeFileSync(urlEvents, JSON.stringify(newEvents));
-
-    return res.status(200).json({
-      status: 'OK',
-      message: 'The event(s) has been successfully deleted!',
-      data: {
-        event: delEvents,
-      },
-    });
+    //console.log(req.params);
+    const results = eventModel.findByIdAndRemove({ _id: id });
+    console.log(results);
+    return res.status(200).json({ message: 'Event deleted' });
   }
 }
 
