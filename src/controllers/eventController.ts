@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Request, Response, NextFunction } from 'express';
 import Controller from './controller';
 import { autobind } from '../utils/util';
@@ -27,12 +28,12 @@ const weekDays = [
 class EventController extends Controller {
   // Get all events or events of the day of week passed by query (if the user insert a day of the week in the query)
   @autobind
-  public getEvents(req: Request, res: Response) {
+  public async getEvents(req: Request, res: Response) {
     let results;
     if (Object.keys(req.query).length !== 0) {
       results = eventModel.find({ dayOfWeek: req.query.dayOfWeek });
     } else {
-      results = eventModel.find({});
+      results = await eventModel.find({});
       console.log(results);
 
       if (!results) {
@@ -40,7 +41,7 @@ class EventController extends Controller {
       }
     }
     return res.status(200).json({
-      events: 'OK',
+      events: results,
       token: req.headers.cookie,
     });
   }
