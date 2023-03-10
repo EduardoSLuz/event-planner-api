@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import AppError from '../utils/appError';
 import Controller from './controller';
-import { autobind } from './../utils/util';
+import { autobind, filterObj } from './../utils/util';
 import userModel from '../models/Users';
 import { authcontroller } from './authController';
 import bcrypt from 'bcrypt';
@@ -33,9 +34,9 @@ class UserController extends Controller {
       return this.sendError(res, 'Invalid Resquest! Missing or invalid fields');
     }
 
-    const user = await userModel.findOne({ email });
+    const userExist = await userModel.findOne({ email });
 
-    if (user) {
+    if (userExist) {
       return this.sendError(res, 'Email Already Exists!');
     }
 
@@ -58,7 +59,7 @@ class UserController extends Controller {
       password: criptoPassword,
     });
     try {
-      userModel.create(newUser);
+      const user = await userModel.create(newUser);
       authcontroller.createSendToken(user, 201, res);
     } catch (error) {
       return res.send({
@@ -101,6 +102,49 @@ class UserController extends Controller {
     return res.send({
       status: res.status,
       message: 'User Logged out',
+    });
+  }
+
+  public async updateMe(req: Request, res: Response, next: NextFunction) {
+    if (req.body.password || req.body.passwordConfirm) {
+      return next(
+        new AppError('Its not allowed to update password by this route!', 400)
+      );
+    }
+
+    const filteredBody = filterObj(
+      req.body,
+      'firstName',
+      'lastName',
+      'birthDate',
+      'city',
+      'country',
+      'email'
+    );
+
+    const updatedUser = await userModel
+      .findByIdAndUpdate(res.locals.user.id, filteredBody, {
+        new: true,
+        runValidators: true,
+      })
+      .select('-__v -password -_id');
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: updatedUser,
+      },
+    });
+  }
+
+  public async deleteMe(req: Request, res: Response, next: NextFunction) {
+    await userModel.findByIdAndRemove(res.locals.user.id);
+
+    res.clearCookie('jwt');
+    res.status(204).json({
+      status: 'success',
+      message: 'User successfully removed and disconnected!',
+      data: null,
     });
   }
 }
