@@ -79,47 +79,14 @@ class EventController extends Controller {
     });
   }
 
-  // DELETE EVENT BY ID
+  // DELETE EVENT BY ID OR DAYWEEK
   @autobind
-<<<<<<< Updated upstream
   async deleteEventByIdOrWeekDay(req: Request, res: Response) {
     const { id } = req.params;
     //console.log(req.params);
     const results = eventModel.findByIdAndRemove({ _id: id });
     console.log(results);
     return res.status(200).json({ message: 'Event deleted' });
-=======
-  async deleteEventByIdOrWeekDay(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    let opts;
-    const opts2 = req.query.dayOfWeek ? { dayOfWeek: req.query.dayOfWeek } : {};
-    if (req.query.dayOfWeek) {
-      opts = { dayOfWeek: req.query.dayOfWeek };
-    } else {
-      opts = { _id: req.params.id };
-    }
-    const result = await eventModel.deleteMany(opts);
-    if (result == null) {
-      return next(new AppError('No event with ID informed!', 404));
-    }
-    //return next(new AppError('No ID informed!', 400));
-    return res.status(200).json({ message: 'Event deleted', result });
-  }
-
-  @autobind
-  async deleteEventByWeekDay(req: Request, res: Response, next: NextFunction) {
-    const result = await eventModel.deleteMany({
-      dayOfWeek: req.query.dayOfWeek,
-    });
-    if (result == null) {
-      return next(new AppError('No event with weekday informed!', 404));
-    }
-    //return next(new AppError('No ID informed!', 400));
-    return res.status(200).json({ message: 'Event deleted', result });
->>>>>>> Stashed changes
   }
 }
 
