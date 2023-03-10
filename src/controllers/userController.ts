@@ -136,6 +136,17 @@ class UserController extends Controller {
       },
     });
   }
+
+  public async deleteMe(req: Request, res: Response, next: NextFunction) {
+    await userModel.findByIdAndRemove(res.locals.user.id);
+
+    res.clearCookie('jwt');
+    res.status(204).json({
+      status: 'success',
+      message: 'User successfully removed and disconnected!',
+      data: null,
+    });
+  }
 }
 
 export const userController = new UserController();

@@ -15,6 +15,7 @@ userRouter.route('/logout').get(authcontroller.protect, userController.logout);
 
 userRouter
   .route('/')
-  .patch(authcontroller.protect, catchAsync(userController.updateMe));
+  .patch(authcontroller.protect, catchAsync(userController.updateMe))
+  .delete(authcontroller.protect, catchAsync(userController.deleteMe));
 
 export { userRouter };
