@@ -29,6 +29,11 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     required: [true, 'DateTime is required'],
   },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Users',
+    required: [true, 'Event must belong to the current user.'],
+  },
   createdAt: {
     type: Date,
     default: Date.now(),

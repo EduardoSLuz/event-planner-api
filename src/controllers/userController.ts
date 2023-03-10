@@ -33,9 +33,9 @@ class UserController extends Controller {
       return this.sendError(res, 'Invalid Resquest! Missing or invalid fields');
     }
 
-    const user = await userModel.findOne({ email });
+    const userExist = await userModel.findOne({ email });
 
-    if (user) {
+    if (userExist) {
       return this.sendError(res, 'Email Already Exists!');
     }
 
@@ -58,7 +58,7 @@ class UserController extends Controller {
       password: criptoPassword,
     });
     try {
-      userModel.create(newUser);
+      const user = await userModel.create(newUser);
       authcontroller.createSendToken(user, 201, res);
     } catch (error) {
       return res.send({

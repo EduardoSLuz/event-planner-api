@@ -50,6 +50,7 @@ class EventController extends Controller {
       description: req.body.description,
       dayOfWeek: req.body.dayOfWeek,
       dateTime: req.body.dateTime,
+      user: res.locals.user.id,
     });
 
     return res.status(201).json({

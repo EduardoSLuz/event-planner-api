@@ -5,15 +5,17 @@ import catchAsync from '../utils/catchAsync';
 
 const eventRouter: Router = Router();
 
+eventRouter.use(authcontroller.protect);
+
 //Routes
 eventRouter
   .route('/')
-  .get(authcontroller.protect, eventController.getEvents)
+  .get(eventController.getEvents)
   .post(catchAsync(eventController.createEvent));
 
 eventRouter
   .route('/:id')
-  .get(authcontroller.protect, eventController.getEvent)
-  .delete(authcontroller.protect, eventController.deleteEventByIdOrWeekDay);
+  .get(eventController.getEvent)
+  .delete(eventController.deleteEventByIdOrWeekDay);
 
 export { eventRouter };
