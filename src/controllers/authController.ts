@@ -11,7 +11,7 @@ class authController extends Controller {
     });
   };
 
-  public createSendToken(user: any, statusCode: any, res: any) {
+  public createSendToken(user: any, statusCode: number, res: any) {
     const token = this.signToken(user._id);
     const cookieOptions = {
       expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
