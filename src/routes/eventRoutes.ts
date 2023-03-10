@@ -10,12 +10,12 @@ eventRouter.use(authcontroller.protect);
 //Routes
 eventRouter
   .route('/')
-  .get(eventController.getEvents)
+  .get(catchAsync(eventController.getEvents))
   .post(catchAsync(eventController.createEvent));
 
 eventRouter
   .route('/:id')
-  .get(eventController.getEvent)
-  .delete(eventController.deleteEventByIdOrWeekDay);
+  .get(catchAsync(eventController.getEvent))
+  .delete(catchAsync(eventController.deleteEventByIdOrWeekDay));
 
 export { eventRouter };
