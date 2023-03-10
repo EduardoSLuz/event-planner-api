@@ -10,8 +10,13 @@ export default class Controller {
     }
   }
 
-  public sendError(res: Response, msg: string, status = 'Fail') {
-    return res.status(404).json({
+  public sendError(
+    res: Response,
+    msg: string,
+    statusCode = 404,
+    status = 'Fail'
+  ) {
+    return res.status(statusCode).json({
       status: status,
       message: msg,
     });

@@ -29,11 +29,20 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     required: [true, 'DateTime is required'],
   },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Users',
+    required: [true, 'Event must belong to the current user.'],
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
-    select: false,
   },
+});
+
+eventSchema.pre(/^find/, function (next) {
+  this.find().select('-__v -user').sort('dateTime createdAt');
+  next();
 });
 
 // Export Schema to create a Model
