@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import AppError from '../utils/appError';
 import Controller from './controller';
-import { autobind } from './../utils/util';
+import { autobind, filterObj } from './../utils/util';
 import userModel from '../models/Users';
 import { authcontroller } from './authController';
 import bcrypt from 'bcrypt';
@@ -101,6 +102,38 @@ class UserController extends Controller {
     return res.send({
       status: res.status,
       message: 'User Logged out',
+    });
+  }
+
+  public async updateMe(req: Request, res: Response, next: NextFunction) {
+    if (req.body.password || req.body.passwordConfirm) {
+      return next(
+        new AppError('Its not allowed to update password by this route!', 400)
+      );
+    }
+
+    const filteredBody = filterObj(
+      req.body,
+      'firstName',
+      'lastName',
+      'birthDate',
+      'city',
+      'country',
+      'email'
+    );
+
+    const updatedUser = await userModel
+      .findByIdAndUpdate(res.locals.user.id, filteredBody, {
+        new: true,
+        runValidators: true,
+      })
+      .select('-__v -password -_id');
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: updatedUser,
+      },
     });
   }
 }
