@@ -8,8 +8,14 @@ const eventRouter: Router = Router();
 //Routes
 eventRouter
   .route('/')
+<<<<<<< Updated upstream
   .get(authcontroller.protect, eventController.getEvents)
   .post(catchAsync(eventController.createEvent));
+=======
+  .get(catchAsync(eventController.getEvents))
+  .post(catchAsync(eventController.createEvent))
+  .delete(catchAsync(eventController.deleteEventByWeekDay));
+>>>>>>> Stashed changes
 
 eventRouter
   .route('/:id')
