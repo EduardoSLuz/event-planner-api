@@ -47,11 +47,28 @@ class UserController {
     const user = await userModel.create(newUser);
     const token = authcontroller.createSendToken(user.id, res);
 
+    const filteredData = filterObj(
+      user,
+      'firstName',
+      'lastName',
+      'birthDate',
+      'city',
+      'country',
+      'email',
+      'active'
+    );
+
     res.status(201).json({
       status: 'success',
       message: 'User created and successfully logged in!',
       data: {
-        user,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        birthDate: user.birthDate,
+        city: user.city,
+        country: user.country,
+        email: user.email,
+        active: user.active,
       },
       token,
     });
@@ -71,14 +88,21 @@ class UserController {
     const user = await userModel.findOne({ email }).select('+password');
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return next(new AppError('Incorrect email or password', 401));
+      return next(new AppError('Incorrect email or password!', 401));
+    }
+
+    let message = 'User logged in successfully!';
+
+    if (!user.active) {
+      await userModel.findByIdAndUpdate(user.id, { active: true });
+      message = 'User reactivated and successfully logged in!';
     }
 
     const token = authcontroller.createSendToken(user.id, res);
 
     res.status(200).json({
       status: 'success',
-      message: 'User logged in successfully!',
+      message,
       token,
     });
   }
@@ -128,12 +152,11 @@ class UserController {
 
   // DELETE CURRENT USER UPDATE
   public async deleteMe(req: Request, res: Response, next: NextFunction) {
-    await userModel.findByIdAndRemove(res.locals.user.id);
+    await userModel.findByIdAndUpdate(res.locals.user.id, { active: false });
 
     res.clearCookie('jwt');
     res.status(204).json({
       status: 'success',
-      message: 'User successfully removed and disconnected!',
       data: null,
     });
   }

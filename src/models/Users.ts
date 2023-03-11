@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 // userSchema.methods.validatePassword = async function (
