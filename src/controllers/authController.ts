@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Response } from 'express';
 import Controller from './controller';
 import jwt from 'jsonwebtoken';
 import User from './../models/Users';
 import AppError from './../utils/appError';
+import { Response } from 'express';
 
 class authController extends Controller {
+  // Function to create a token, expires in 10 days
   public signToken = (id: string) => {
     return jwt.sign({ id }, process.env.JWT_SECRET!, {
       expiresIn: '10d',
     });
   };
 
+  // Function to send a create token by signToken function, sign the token to a cookie called jwt in the response
   public createSendToken(user: any, statusCode: any, res: Response) {
     const token = this.signToken(user._id);
     const cookieOptions = {
@@ -29,6 +31,7 @@ class authController extends Controller {
     });
   }
 
+  // Middleware to protect our routes, check if we have the token in cookie, and if is a valid token
   public async protect(req: any, res: any, next: any) {
     let token;
     if (req.headers.cookie) {

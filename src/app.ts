@@ -2,9 +2,9 @@
 import express from 'express';
 import morgan from 'morgan';
 import AppError from './utils/appError';
-// Controller
 import globalErrorHandler from './controllers/errorController';
-// Adding Routes
+import swaggerUi from 'swagger-ui-express';
+import swaggerFile from './swagger/swagger-api.json';
 import { userRouter } from './routes/userRoutes';
 import { eventRouter } from './routes/eventRoutes';
 
@@ -24,6 +24,7 @@ export class App {
       this.server.use(morgan('dev'));
     }
     this.server.use(express.json());
+    this.server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
   }
 
   // Main Routes

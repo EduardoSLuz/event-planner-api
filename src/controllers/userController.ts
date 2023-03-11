@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/appError';
 import Controller from './controller';
-import { autobind, filterObj } from './../utils/util';
 import userModel from '../models/Users';
-import { authcontroller } from './authController';
 import bcrypt from 'bcrypt';
+import { NextFunction, Request, Response } from 'express';
+import { authcontroller } from './authController';
+import { autobind, filterObj } from './../utils/util';
 
 class UserController extends Controller {
+  // Function to create a user with the request body
   @autobind
   public async signUp(req: Request, res: Response) {
     const data = this.validBody(req) ? Object.assign(req.body) : {};
@@ -69,7 +70,7 @@ class UserController extends Controller {
     }
   }
 
-  // POST USERS SIGN IN
+  // Function to login with credentials passed by the request body, create a token with the login is a success
   @autobind
   public async signIn(req: Request, res: Response) {
     const data = this.validBody(req) ? Object.assign(req.body) : {};
@@ -97,6 +98,7 @@ class UserController extends Controller {
     authcontroller.createSendToken(user, 200, res);
   }
 
+  // Function to logout the user, clear the cookie with logout is a success
   public async logout(_: Request, res: Response) {
     res.clearCookie('jwt');
     return res.send({
@@ -105,6 +107,7 @@ class UserController extends Controller {
     });
   }
 
+  // Function to update a user (document)
   public async updateMe(req: Request, res: Response, next: NextFunction) {
     if (req.body.password || req.body.passwordConfirm) {
       return next(
@@ -137,6 +140,7 @@ class UserController extends Controller {
     });
   }
 
+  // Function to delet a user with the ID passed by param
   public async deleteMe(req: Request, res: Response, next: NextFunction) {
     await userModel.findByIdAndRemove(res.locals.user.id);
 

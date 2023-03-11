@@ -1,18 +1,21 @@
+import catchAsync from '../utils/catchAsync';
 import { Router } from 'express';
 import { eventController } from '../controllers/eventController';
 import { authcontroller } from '../controllers/authController';
-import catchAsync from '../utils/catchAsync';
 
+// Instance of Router, express
 const eventRouter: Router = Router();
 
+// Istance of router protected by middleware of JWT
 eventRouter.use(authcontroller.protect);
 
 //Routes
+
 eventRouter
   .route('/')
-  .get(authcontroller.protect, eventController.getEvents)
-  .post(catchAsync(eventController.createEvent))
-  .delete(catchAsync(eventController.deleteEventByWeekDay));
+  .get(eventController.getEvents)
+  .delete(catchAsync(eventController.deleteEventByIdOrWeekDay)) // Verificar
+  .post(catchAsync(eventController.createEvent));
 
 eventRouter
   .route('/:id')
