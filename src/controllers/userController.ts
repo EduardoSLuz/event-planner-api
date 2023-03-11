@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/appError';
-import Controller from './controller';
-import { autobind, filterObj } from './../utils/util';
+import { filterObj } from './../utils/util';
 import userModel from '../models/Users';
 import { authcontroller } from './authController';
 import bcrypt from 'bcrypt';
 
-class UserController extends Controller {
-  @autobind
-  public async signUp(req: Request, res: Response) {
-    const data = this.validBody(req) ? Object.assign(req.body) : {};
+class UserController {
+  public async signUp(req: Request, res: Response, next: NextFunction) {
+    const data = Object.assign(req.body);
     const {
       firstName,
       lastName,
@@ -21,33 +19,20 @@ class UserController extends Controller {
       password,
       confirmPassword,
     } = data;
-    if (
-      !firstName ||
-      !lastName ||
-      !birthDate ||
-      !city ||
-      !country ||
-      !email ||
-      !password ||
-      !confirmPassword
-    ) {
-      return this.sendError(res, 'Invalid Resquest! Missing or invalid fields');
-    }
 
     const userExist = await userModel.findOne({ email });
 
     if (userExist) {
-      return this.sendError(res, 'Email Already Exists!');
+      return next(new AppError('Email Already Exists!', 400));
     }
 
-    if (data.password !== data.confirmPassword) {
-      return this.sendError(
-        res,
-        'Confirm Password is different from Password!'
+    if (password !== confirmPassword) {
+      return next(
+        new AppError('Confirm Password is different from Password!', 400)
       );
     }
 
-    const criptoPassword = await bcrypt.hash(data.password, 14);
+    const criptoPassword = await bcrypt.hash(password, 14);
 
     const newUser = new userModel({
       firstName,
@@ -58,45 +43,47 @@ class UserController extends Controller {
       email,
       password: criptoPassword,
     });
-    try {
-      const user = await userModel.create(newUser);
-      authcontroller.createSendToken(user, 201, res);
-    } catch (error) {
-      return res.send({
-        status: res.status,
-        message: 'Error in create a new user',
-      });
-    }
+
+    const user = await userModel.create(newUser);
+    const token = authcontroller.createSendToken(user.id, res);
+
+    res.status(201).json({
+      status: 'success',
+      message: 'User created and successfully logged in!',
+      data: {
+        user,
+      },
+      token,
+    });
   }
 
   // POST USERS SIGN IN
-  @autobind
-  public async signIn(req: Request, res: Response) {
-    const data = this.validBody(req) ? Object.assign(req.body) : {};
-
+  public async signIn(req: Request, res: Response, next: NextFunction) {
+    const data = Object.assign(req.body);
     const { email, password } = data;
 
     if (!email || !password) {
-      return this.sendError(
-        res,
-        'Invalid Resquest! Expected fields: Email and Password'
+      return next(
+        new AppError('Invalid Resquest! Expected Email and Password', 401)
       );
     }
 
-    const user = await userModel.findOne({ email }, 'email password');
+    const user = await userModel.findOne({ email }).select('+password');
 
-    if (!user) {
-      return this.sendError(res, 'User Does Not Exist!');
-    }
-    const verifyPassword = await bcrypt.compare(password, user.password);
-
-    if (!verifyPassword) {
-      return this.sendError(res, 'Password incorrect, try again');
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return next(new AppError('Incorrect email or password', 401));
     }
 
-    authcontroller.createSendToken(user, 200, res);
+    const token = authcontroller.createSendToken(user.id, res);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User logged in successfully!',
+      token,
+    });
   }
 
+  // POST CURRENT USER LOGOUT
   public async logout(_: Request, res: Response) {
     res.clearCookie('jwt');
     return res.send({
@@ -105,6 +92,7 @@ class UserController extends Controller {
     });
   }
 
+  // PATCH CURRENT USER UPDATE
   public async updateMe(req: Request, res: Response, next: NextFunction) {
     if (req.body.password || req.body.passwordConfirm) {
       return next(
@@ -130,13 +118,15 @@ class UserController extends Controller {
       .select('-__v -password -_id');
 
     res.status(200).json({
-      status: 'success',
+      status: 'OK',
+      message: 'User successfully updated!',
       data: {
         user: updatedUser,
       },
     });
   }
 
+  // DELETE CURRENT USER UPDATE
   public async deleteMe(req: Request, res: Response, next: NextFunction) {
     await userModel.findByIdAndRemove(res.locals.user.id);
 

@@ -17,6 +17,6 @@ eventRouter
 eventRouter
   .route('/:id')
   .get(catchAsync(eventController.getEvent))
-  .delete(catchAsync(eventController.deleteEventByIdOrWeekDay));
+  .delete(catchAsync(eventController.deleteEventById));
 
 export { eventRouter };

@@ -7,15 +7,17 @@ const userRouter: Router = Router();
 
 //Routes
 
-userRouter.route('/signUp').post(userController.signUp);
+userRouter.route('/signUp').post(catchAsync(userController.signUp));
 
 userRouter.route('/signIn').post(userController.signIn);
 
-userRouter.route('/logout').get(authcontroller.protect, userController.logout);
+userRouter.use(authcontroller.protect);
+
+userRouter.route('/logout').get(userController.logout);
 
 userRouter
   .route('/')
-  .patch(authcontroller.protect, catchAsync(userController.updateMe))
-  .delete(authcontroller.protect, catchAsync(userController.deleteMe));
+  .patch(catchAsync(userController.updateMe))
+  .delete(catchAsync(userController.deleteMe));
 
 export { userRouter };
