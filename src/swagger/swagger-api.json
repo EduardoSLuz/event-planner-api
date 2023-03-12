@@ -2,8 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Event Planner API - Challenge Two",
-    "description": "REST API For Challenge Two - COMPASS UOL",
-    "version": "1.0.0"
+    "description": "REST API For Challenge Two - `COMPASS UOL`",
+    "version": "1.0.0",
+    "contact": {
+      "email": "ggoes269@gmail.com"
+    }
   },
   "servers": [
     {
@@ -11,12 +14,22 @@
       "description": ""
     }
   ],
+  "tags": [
+    {
+      "name": "Events",
+      "description": "Everything about our Events"
+    },
+    {
+      "name": "Users",
+      "description": "Everything about our Users"
+    }
+  ],
   "paths": {
     "/events": {
       "get": {
         "tags": ["Events"],
+        "summary": "Returns a list of events.",
         "description": "Return all events of the DB, this funcionality only run if the user is logged",
-        "operationId": "",
         "responses": {
           "200": {
             "description": "Return a response with all events",
@@ -43,6 +56,7 @@
       },
       "post": {
         "tags": ["Events"],
+        "summary": "Create a event",
         "description": "Create a event with the field's required in the request body",
         "operationId": "",
         "requestBody": {
@@ -70,6 +84,7 @@
       },
       "delete": {
         "tags": ["Events"],
+        "summary": "Delete event's based in day of week",
         "description": "Delete a event with the id passed by param, if we have a document in the DB with this id",
         "operationId": "",
         "responses": {
@@ -78,7 +93,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/deleteEventByIdOrWeekDay"
+                  "$ref": "#/components/schemas/deleteEvent"
                 }
               }
             }
@@ -110,6 +125,7 @@
     "/events/:id": {
       "get": {
         "tags": ["Events"],
+        "summary": "Returns a event",
         "description": "Return a event with the id passed by param",
         "operationId": "",
         "responses": {
@@ -138,6 +154,7 @@
       },
       "delete": {
         "tags": ["Events"],
+        "summary": "Delete a event with id",
         "description": "Delete a document with the id passed by param",
         "operationId": "",
         "responses": {
@@ -168,25 +185,20 @@
     "/users": {
       "delete": {
         "tags": ["Users"],
+        "summary": "Delete a user",
         "description": "This route will be used for delete the user",
         "operationId": "",
         "responses": {
           "200": {
             "description": "The user has been deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/deleteMe"
-                }
-              }
-            }
+            "content": "Successfuly deleted"
           }
         }
       },
       "patch": {
         "tags": ["Users"],
+        "summary": "Update the info of a user",
         "description": "This route will be used to update a user",
-        "operationId": "",
         "parameters": [
           {
             "name": "weekday",
@@ -214,7 +226,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventSendResponse"
+                  "$ref": "#/components/schemas/updatedUser"
                 }
               }
             }
@@ -236,6 +248,7 @@
     "/users/signUp": {
       "post": {
         "tags": ["Users"],
+        "summary": "Register a user",
         "operationId": "",
         "requestBody": {
           "content": {
@@ -249,13 +262,7 @@
         "responses": {
           "200": {
             "description": "The user has been successfully registered",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserPostResponse"
-                }
-              }
-            }
+            "content": "Successfuly created"
           },
           "404": {
             "description": "Fail message...",
@@ -273,15 +280,10 @@
     "/users/signIn": {
       "post": {
         "tags": ["Users"],
+        "summary": "Login with user credentials ",
         "operationId": "",
         "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserLoginRequest"
-              }
-            }
-          }
+          "content": "OK"
         },
         "responses": {
           "200": {
@@ -310,7 +312,7 @@
     "/users/logout": {
       "get": {
         "tags": ["Users"],
-        "operationId": "",
+        "summary": "Logout of a user",
         "requestBody": {
           "content": {
             "application/json": {
@@ -323,13 +325,7 @@
         "responses": {
           "200": {
             "description": "The user has been successfully logged in",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserLoginResponse"
-                }
-              }
-            }
+            "content": "OK"
           },
           "404": {
             "description": "Fail message...",
@@ -347,12 +343,6 @@
   },
   "components": {
     "schemas": {
-      "getEvents": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Event"
-        }
-      },
       "Event": {
         "type": "object",
         "properties": {
@@ -376,36 +366,6 @@
           "createdAt": {
             "type": "Date",
             "format": "yyyy-mm-ddTH:m:sZ"
-          }
-        }
-      },
-      "createEvent": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "dateTime": {
-            "type": "string",
-            "format": "yyyy-mm-ddTH:m:sZ"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "yyyy-mm-ddTH:m:sZ"
-          }
-        }
-      },
-      "EventSendResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "$ref": "#/components/schemas/EventSendResponse_data"
           }
         }
       },
@@ -436,101 +396,50 @@
           },
           "password": {
             "type": "string"
-          },
-          "confirmPassword": {
-            "type": "string"
           }
         }
       },
-      "UserRequest": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "birthDate": {
-            "type": "string",
-            "format": "yyyy-mm-dd"
-          },
-          "city": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string",
-            "format": "********"
-          },
-          "confirmPassword": {
-            "type": "string",
-            "format": "********"
-          }
+      "getEvents": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "$ref": "#/components/schemas/Event"
         }
       },
-      "UserLogin": {
+      "getEvent": {
         "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          }
-        }
+        "$ref": "#/components/schemas/Event"
       },
-      "UserLoginRequest": {
+      "createEvent": {
         "type": "object",
         "properties": {
-          "email": {
+          "id": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          }
-        }
-      },
-      "UserPostResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
+          "description": {
             "type": "string"
           },
-          "message": {
+          "dayOfWeek": {
             "type": "string",
             "format": "yyyy-mm-ddTH:m:sZ"
           },
-          "data": {
-            "$ref": "#/components/schemas/UserPostResponse_data"
-          }
-        }
-      },
-      "UserLoginResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
+          "dateTime": {
             "type": "string",
             "format": "yyyy-mm-ddTH:m:sZ"
           },
-          "data": {
-            "$ref": "#/components/schemas/UserLoginResponse_data"
+          "createdAt": {
+            "type": "string",
+            "format": "yyyy-mm-ddTH:m:sZ"
           }
         }
+      },
+      "deleteEvent": {
+        "type": "object",
+        "$ref": "#/components/schemas/Event"
+      },
+      "updatedUser": {
+        "type": "object",
+        "$ref": "#/components/schemas/User"
       },
       "Fail": {
         "type": "object",
@@ -544,39 +453,6 @@
           }
         },
         "description": "failMessage."
-      },
-      "EventSendResponse_data": {
-        "type": "object",
-        "properties": {
-          "event": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Event"
-            }
-          }
-        }
-      },
-      "UserPostResponse_data": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/User"
-            }
-          }
-        }
-      },
-      "UserLoginResponse_data": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserLogin"
-            }
-          }
-        }
       }
     }
   }

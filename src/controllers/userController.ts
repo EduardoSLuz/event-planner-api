@@ -100,11 +100,18 @@ class UserController extends Controller {
 
   // Function to logout the user, clear the cookie with logout is a success
   public async logout(_: Request, res: Response) {
-    res.clearCookie('jwt');
-    return res.send({
-      status: res.status,
-      message: 'User Logged out',
-    });
+    try {
+      res.clearCookie('jwt');
+      return res.send({
+        status: res.status,
+        message: 'User Logged out',
+      });
+    } catch (error) {
+      return res.send({
+        status: res.status,
+        message: 'Error',
+      });
+    }
   }
 
   // Function to update a user (document)
