@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha tests/test.js",
-    "start": "npm install & npx tsc & node dist/server"
+    "start": "npm install & node dist/server"
   },
   "repository": {
     "type": "git",
