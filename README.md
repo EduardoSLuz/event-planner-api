@@ -8,7 +8,7 @@ This API also has a Swagger documentation, follow the link to access it
 
 [Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/event-planner_api_challenge_two/1.0.0#/);
 
-## 🔗 Deploy in Railway
+## 🔗 Deploy in Cyclic
 
 Application Public Domain
 
