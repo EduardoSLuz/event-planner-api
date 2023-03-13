@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+// import bcrypt from 'bcrypt';
 
 // Schema of User document
 const userSchema = new mongoose.Schema({
@@ -23,7 +24,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
+
+// userSchema.methods.validatePassword = async function (
+//   candidatePassword: string,
+//   userPassword: string
+// ) {
+//   return await bcrypt.compare(candidatePassword, userPassword);
+// };
 
 // Export Schema to create a Model
 const userModel = mongoose.model('User', userSchema);

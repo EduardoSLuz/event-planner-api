@@ -1,12 +1,10 @@
 /* eslint-disable no-console */
+import { Request, Response, NextFunction } from 'express';
 import AppError from '../utils/appError';
 import eventModel from '../models/Events';
-import { Request, Response, NextFunction } from 'express';
-import { autobind } from '../utils/util';
 
 class EventController {
   // Get all events or events of the day of week passed by query (if the user insert a day of the week in the query)
-  @autobind
   public async getEvents(req: Request, res: Response, next: NextFunction) {
     const opts =
       Object.keys(req.query).length !== 0
@@ -27,8 +25,7 @@ class EventController {
     });
   }
 
-  // Get the event by id
-  @autobind
+  // Get event by id
   public async getEvent(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const result = await eventModel.find({ _id: id, user: res.locals.user.id });
@@ -42,18 +39,17 @@ class EventController {
     });
   }
 
-  // Create a event with the request body
-  @autobind
-  public async createEvent(req: Request, res: Response) {
+  // POST CREATE EVENT
+  public async createEvent(req: Request, res: Response, next: NextFunction) {
     const event = await eventModel.create({
       description: req.body.description,
-      dayOfWeek: req.body.dayOfWeek,
+      dayOfWeek: req.body.dayOfWeek.toLowerCase(),
       dateTime: req.body.dateTime,
       user: res.locals.user.id,
     });
 
     return res.status(201).json({
-      status: 'OK',
+      status: 'success',
       message: 'The event has been successfully registered!',
       data: {
         event: {
@@ -67,27 +63,47 @@ class EventController {
     });
   }
 
-  // Delet a event with the ID in the param, if the event with the ID exists
-  @autobind
-  async deleteEventByIdOrWeekDay(
+  // DELETE EVENT BY ID
+  public async deleteEventById(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
-    let result;
-    if (req.params.id) {
-      const { id } = req.params;
-      //console.log(req.params);
+    const { id } = req.params;
+    const event = await eventModel.findOneAndRemove({
+      _id: id,
+      user: res.locals.user.id,
+    });
 
-      result = await eventModel.findByIdAndRemove(id);
-      if (result == null) {
-        return next(new AppError('No event with id informed!', 404));
-      }
-      /* console.log(result); */
-    } else {
-      return next(new AppError('No id informed!', 400));
+    if (!event) {
+      return next(new AppError('No event with ID informed!', 404));
     }
-    return res.status(200).json({ message: 'Event deleted', result });
+
+    return res
+      .status(200)
+      .json({ status: 'success', message: 'Event deleted!', event });
+  }
+
+  // DELETE EVENT BY WEEKDAY
+  public async deleteEventByWeekDay(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const events = await eventModel.deleteMany({
+      dayOfWeek: req.query.dayOfWeek,
+      user: res.locals.user.id,
+    });
+
+    if (events.deletedCount === 0) {
+      return next(new AppError('No event with dayOfWeek informed!', 404));
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Events deleted!',
+      eventsDeleted: events.deletedCount,
+    });
   }
 }
 

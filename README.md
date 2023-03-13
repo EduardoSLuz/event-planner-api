@@ -1,8 +1,14 @@
-# API Planner
+# Event Planner API
 
-REST API developed for CompassUOL's Node JS internship, its objective is to provide routes for managing and controlling events, login and user registration.
+REST API developed for CompassUOL's Node JS Challenge 2, aims to provide routes for managing and controlling events, login and user registration, using MongoDB as a database.
 
-## 💻 Installing the Api Planner
+## 📁 Swagger Documetation
+
+This API also has a Swagger documentation, follow the link to access it
+
+[Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/event-planner_api_challenge_two/1.0.0#/);
+
+## 💻 Installing the Event Planner API
 
 ### Requirements
 
@@ -18,7 +24,7 @@ Para instalar a projeto e rodar a API, you must have installed on your device:
 Clone the project to a folder on your device or download a zipped copy and then unzip it to your device folder.
 
 ```
-git clone https://github.com/EduardoSLuz/api-planner.git
+git clone https://github.com/EduardoSLuz/event-planner-api.git
 ```
 
 In the project folder, open a terminal and run the following command:
@@ -47,164 +53,6 @@ It is recommended to use [POSTMAN](https://www.postman.com) to perform the reque
 
 Now in POSTMAN, use "[http://localhost:8000](http://localhost:8000) + route" para realizar as requisições, to perform the requests, see the available routes below.
 
-## Event Routes
-
-### `GET` All events
-
-_This route will return all registered event_
-
-```
-localhost:8000/api/v1/events
-```
-
-Example response:
-
-```json
-[
-  {
-    "_id": "1",
-    "description": "Example description",
-    "dateTime": "2023-02-10T14:47:32.962Z",
-    "createdAt": "2023-02-10T14:47:32.962Z"
-  }
-]
-```
-
-### `GET` Event by id
-
-_This route will return an event of the given id_
-
-```
-localhost:8000/api/v1/events/{id}
-```
-
-_The `id` parameter must be a number_
-
-Example response:
-
-```json
-{
-  "_id": "1",
-  "description": "Example Description",
-  "dateTime": "2023-02-10T14:47:32.962Z",
-  "createdAt": "2023-02-10T14:47:32.962Z"
-}
-```
-
-### `GET` Events by weekday
-
-_This route will return all registered events on the informed weekday_
-
-```
-localhost:8000/api/v1/events/{weekday}
-```
-
-_Accepted values ​​for weekday:_ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"
-
-Example response:
-
-```json
-[
-  {
-    "_id": "2",
-    "description": "Example Description2",
-    "dateTime": "2023-02-11T14:47:32.962Z",
-    "createdAt": "2023-02-11T14:47:32.962Z"
-  }
-]
-```
-
-### `POST` Create event
-
-_This route will create an event_
-
-```
-localhost:8000/api/v1/events
-```
-
-Example request body:
-
-```json
-{
-  "description": "Example Request Description",
-  "dateTime": "2023-02-06T14:47:32.962Z",
-  "createdAt": "2023-02-06T14:47:32.962Z"
-}
-```
-
-Example response:
-
-```json
-{
-  "status": "OK",
-  "message": "The event has been successfully registered!",
-  "data": {
-    "event": [
-      {
-        "_id": "3",
-        "description": "Example Request Description",
-        "dateTime": "2023-02-06T14:47:32.962Z",
-        "createdAt": "2023-02-06T14:47:32.962Z"
-      }
-    ]
-  }
-}
-```
-
-### `DELETE` Event by id
-
-_This route will delete an event by id_
-
-```
-localhost:8000/api/v1/events/{id}
-```
-
-_The `id` parameter must be a number_
-
-Example response:
-
-```json
-{
-  "status": "OK",
-  "message": "The event(s) has been successfully deleted!",
-  "data": {
-    "event": {
-      "_id": "3",
-      "description": "Example Request Description",
-      "dateTime": "2023-02-06T14:47:32.962Z",
-      "createdAt": "2023-02-06T14:47:32.962Z"
-    }
-  }
-}
-```
-
-### `DELETE` Events by weekday
-
-_This route will delete all registered events on the informed weekday_
-
-```
-localhost:8000/api/v1/events/{weekday}
-```
-
-_Accepted values ​​for weekday:_ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"
-
-Example response:
-
-```json
-{
-  "status": "OK",
-  "message": "The event(s) has been successfully deleted!",
-  "data": {
-    "event": {
-      "_id": "4",
-      "description": "Example Request Description2",
-      "dateTime": "2023-02-06T14:47:32.962Z",
-      "createdAt": "2023-02-06T14:47:32.962Z"
-    }
-  }
-}
-```
-
 ## User Routes
 
 ### `POST` SignUp user
@@ -219,14 +67,14 @@ Example request body:
 
 ```json
 {
-  "firstName": "string",
-  "lastName": "string",
-  "birthDate": "2023-02-06",
-  "city": "string",
-  "country": "string",
-  "email": "string",
-  "password": "string",
-  "confirmPassword": "string"
+  "firstName": "Name",
+  "lastName": "Last Name",
+  "birthDate": "2000-03-12",
+  "city": "City Name",
+  "country": "Country Name",
+  "email": "example@email.com",
+  "password": "examplepass123",
+  "confirmPassword": "examplepass123"
 }
 ```
 
@@ -234,21 +82,18 @@ Example response:
 
 ```json
 {
-  "status": "OK",
-  "message": "The user has been successfully registered!",
+  "status": "success",
+  "message": "User created and successfully logged in!",
   "data": {
-    "user": {
-      "_id": "1",
-      "firstName": "username",
-      "lastName": "lastname",
-      "birthDate": "2023-02-10",
-      "city": "Cirt",
-      "country": "Country",
-      "email": "email@email.com",
-      "password": "******",
-      "confirmPassword": "******"
-    }
-  }
+    "firstName": "Name",
+    "lastName": "Last Name",
+    "birthDate": "2000-03-12",
+    "city": "City Name",
+    "country": "Country Name",
+    "email": "example@email.com",
+    "active": true
+  },
+  "token": "EXAMPLETOKEN@123"
 }
 ```
 
@@ -264,8 +109,8 @@ Example request body:
 
 ```json
 {
-  "email": "email@email.com",
-  "password": "123456"
+  "email": "example@email.com",
+  "password": "12345678"
 }
 ```
 
@@ -273,16 +118,225 @@ Example response:
 
 ```json
 {
-  "status": "OK",
-  "message": "The user has been successfully logged in!",
+  "status": "success",
+  "message": "User logged in successfully!",
+  "token": "EXAMPLETOKEN@123"
+}
+```
+
+### `PATCH` Update current user
+
+** IMPORTANT !!! **
+You must login via /signIn route to access route below!
+
+_This route will update the curent user connected_
+
+```
+localhost:8000/api/v1/users
+```
+
+Example request body:
+
+```json
+{
+  "firstName": "Name2",
+  "lastName": "Last Name2",
+  "birthDate": "2000-03-12",
+  "city": "City Name2",
+  "country": "Country Name2",
+  "email": "example2@email.com"
+}
+```
+
+Example response:
+
+```json
+{
+  "status": "success",
+  "message": "User successfully updated!",
   "data": {
     "user": {
-      "_id": "2",
-      "firstName": "username",
-      "lastName": "lastname",
-      "email": "email@email.com"
+      "active": true,
+      "firstName": "Name2",
+      "lastName": "Last Name2",
+      "birthDate": "2003-01-26T00:00:00.000Z",
+      "city": "City Name2",
+      "country": "Country Name2",
+      "email": "example2@email.com"
     }
   }
+}
+```
+
+### `DELETE` Delete current user
+
+** IMPORTANT !!! **
+You must login via /signIn route to access route below!
+
+_This route will delete the curent user connected_
+
+```
+localhost:8000/api/v1/users
+```
+
+Example response: _Just returns status 204_
+
+## Event Routes (Authentication Required)
+
+** IMPORTANT **
+You must login via /signIn route to access all event routes below!
+
+### `POST` Create event
+
+_This route will create an event_
+
+```
+localhost:8000/api/v1/events
+```
+
+Example request body:
+
+```json
+{
+  "description": "To Do Everything",
+  "dayOfWeek": "monday",
+  "dateTime": "2023-03-13"
+}
+```
+
+Example response:
+
+```json
+{
+  "status": "success",
+  "message": "The event has been successfully registered!",
+  "data": {
+    "event": {
+      "description": "To Do Everything",
+      "dayOfWeek": "monday",
+      "dateTime": "2023-03-13T00:00:00.000Z",
+      "createdAt": "2023-03-13T00:02:31.576Z",
+      "id": "exampleID123"
+    }
+  }
+}
+```
+
+### `GET` All events
+
+_This route will return all registered event_
+
+```
+localhost:8000/api/v1/events
+```
+
+Example response:
+
+```json
+{
+  "events": [
+    {
+      "_id": "exampleID123",
+      "description": "To Do Everything",
+      "dayOfWeek": "monday",
+      "dateTime": "2023-03-13T00:00:00.000Z",
+      "createdAt": "2023-03-13T00:02:31.576Z"
+    }
+  ]
+}
+```
+
+### `GET` Event by id
+
+_This route will return an event of the given id_
+
+```
+localhost:8000/api/v1/events/{id}
+```
+
+Example response:
+
+```json
+{
+  "event": [
+    {
+      "_id": "exampleID123",
+      "description": "To Do Everything",
+      "dayOfWeek": "monday",
+      "dateTime": "2023-03-13T00:00:00.000Z",
+      "createdAt": "2023-03-13T00:02:31.576Z"
+    }
+  ]
+}
+```
+
+### `GET` Events by dayOfWeek
+
+_This route will return all registered events on the informed dayOfWeek_
+
+```
+localhost:8000/api/v1/events?dayOfWeek=monday
+```
+
+_Accepted values ​​for dayOfWeek:_ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"
+
+Example response:
+
+```json
+{
+  "events": [
+    {
+      "_id": "exampleID123",
+      "description": "To Do Everything",
+      "dayOfWeek": "monday",
+      "dateTime": "2023-03-13T00:00:00.000Z",
+      "createdAt": "2023-03-13T00:02:31.576Z"
+    }
+  ]
+}
+```
+
+### `DELETE` Event by id
+
+_This route will delete an event by id_
+
+```
+localhost:8000/api/v1/events/{id}
+```
+
+Example response:
+
+```json
+{
+  "status": "success",
+  "message": "Event deleted!",
+  "event": {
+    "_id": "exampleID123",
+    "description": "To Do Everything",
+    "dayOfWeek": "monday",
+    "dateTime": "2023-03-13T00:00:00.000Z",
+    "createdAt": "2023-03-13T00:02:31.576Z"
+  }
+}
+```
+
+### `DELETE` Events by dayOfWeek
+
+_This route will delete all registered events on the informed weekday_
+
+```
+localhost:8000/api/v1/events?dayOfWeek=monday
+```
+
+_Accepted values ​​for weekday:_ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"
+
+Example response:
+
+```json
+{
+  "status": "success",
+  "message": "Events deleted!",
+  "eventsDeleted": 2
 }
 ```
 
@@ -290,10 +344,27 @@ Example response:
 
 In case of errors in the processing of data or in searches, the response will always be in this format:
 
+# Production Mode
+
 ```json
 {
-  "status": "error or fail",
+  "status": "fail",
   "message": "description..."
+}
+```
+
+# Development Mode
+
+```json
+{
+  "status": "fail",
+  "error": {
+    "statusCode": 404,
+    "status": "fail",
+    "isOperational": true
+  },
+  "message": "description...",
+  "stack": "Fail Origin..."
 }
 ```
 
@@ -329,10 +400,8 @@ Events
     /POST Users
       ✔ Testing POST SignUp
       ✔ Testing POST SignIn
+    /PATCH Users
+      ✔ Testing PATCH Update Current User
+    /DELETE Users
+      ✔ Testing DELETE Delete Current User
 ```
-
-## 📁 Swagger Documetation
-
-This API also has a Swagger documentation, follow the link to access it
-
-[Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/Api-Planner/1.0.0);
