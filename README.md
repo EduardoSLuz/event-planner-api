@@ -124,10 +124,10 @@ Example response:
 }
 ```
 
-**_ IMPORTANT _**
-You must login via /signIn route to access all user routes below!
-
 ### `PATCH` Update current user
+
+** IMPORTANT !!! **
+You must login via /signIn route to access route below!
 
 _This route will update the curent user connected_
 
@@ -170,6 +170,9 @@ Example response:
 
 ### `DELETE` Delete current user
 
+** IMPORTANT !!! **
+You must login via /signIn route to access route below!
+
 _This route will delete the curent user connected_
 
 ```
@@ -180,7 +183,7 @@ Example response: _Just returns status 204_
 
 ## Event Routes (Authentication Required)
 
-**_ IMPORTANT _**
+** IMPORTANT **
 You must login via /signIn route to access all event routes below!
 
 ### `POST` Create event
@@ -248,7 +251,7 @@ Example response:
 _This route will return an event of the given id_
 
 ```
-localhost:8000/api/v1/events/_exampleID123_
+localhost:8000/api/v1/events/{id}
 ```
 
 Example response:
@@ -298,7 +301,7 @@ Example response:
 _This route will delete an event by id_
 
 ```
-localhost:8000/api/v1/events/_exampleID123_
+localhost:8000/api/v1/events/{id}
 ```
 
 Example response:
@@ -317,7 +320,7 @@ Example response:
 }
 ```
 
-### `DELETE` Events by weekday
+### `DELETE` Events by dayOfWeek
 
 _This route will delete all registered events on the informed weekday_
 
