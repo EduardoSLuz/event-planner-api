@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// Schema of User document
+// Schema of User document in mongoDB
 const eventSchema = new mongoose.Schema({
   // Field's
   description: {

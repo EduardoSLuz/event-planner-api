@@ -1,7 +1,7 @@
 {
   "name": "api-planner",
   "version": "1.0.0",
-  "description": "REST API developed for CompassUOL's Node JS internship, its objective is to provide routes for managing and controlling events, login and user registration.",
+  "description": "REST API for challenge two - COMPASS UOL",
   "main": "server.js",
   "scripts": {
     "test": "mocha tests/test.js",
@@ -25,6 +25,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.1",
     "morgan": "^1.10.0",
+    "swagger-ui-express": "^4.6.2",
     "typescript": "^4.9.5"
   },
   "devDependencies": {
@@ -34,6 +35,7 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.13.0",
+    "@types/swagger-ui-express": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "chai": "^4.3.7",
