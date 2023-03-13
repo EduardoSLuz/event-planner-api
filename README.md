@@ -13,7 +13,7 @@ This API also has a Swagger documentation, follow the link to access it
 Application Public Domain
 
 ```
-https://event-planner-api-production.up.railway.app/
+https://lazy-erin-gosling-boot.cyclic.app/ap1/v1
 ```
 
 ## 💻 Installing the Event Planner API
