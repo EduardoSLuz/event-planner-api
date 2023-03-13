@@ -43,7 +43,7 @@ class EventController {
   public async createEvent(req: Request, res: Response, next: NextFunction) {
     const event = await eventModel.create({
       description: req.body.description,
-      dayOfWeek: req.body.dayOfWeek,
+      dayOfWeek: req.body.dayOfWeek.toLowerCase(),
       dateTime: req.body.dateTime,
       user: res.locals.user.id,
     });

@@ -47,17 +47,6 @@ class UserController {
     const user = await userModel.create(newUser);
     const token = authcontroller.createSendToken(user.id, res);
 
-    const filteredData = filterObj(
-      user,
-      'firstName',
-      'lastName',
-      'birthDate',
-      'city',
-      'country',
-      'email',
-      'active'
-    );
-
     res.status(201).json({
       status: 'success',
       message: 'User created and successfully logged in!',
@@ -142,7 +131,7 @@ class UserController {
       .select('-__v -password -_id');
 
     res.status(200).json({
-      status: 'OK',
+      status: 'success',
       message: 'User successfully updated!',
       data: {
         user: updatedUser,
