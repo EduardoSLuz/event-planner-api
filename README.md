@@ -8,11 +8,19 @@ This API also has a Swagger documentation, follow the link to access it
 
 [Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/event-planner_api_challenge_two/1.0.0#/);
 
+## 🔗 Deploy in Railway
+
+Application Public Domain
+
+```
+https://event-planner-api-production.up.railway.app/
+```
+
 ## 💻 Installing the Event Planner API
 
 ### Requirements
 
-Para instalar a projeto e rodar a API, you must have installed on your device:
+To install the project and run the API, you must have installed on your device:
 
 - [Git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org)
@@ -85,13 +93,15 @@ Example response:
   "status": "success",
   "message": "User created and successfully logged in!",
   "data": {
-    "firstName": "Name",
-    "lastName": "Last Name",
-    "birthDate": "2000-03-12",
-    "city": "City Name",
-    "country": "Country Name",
-    "email": "example@email.com",
-    "active": true
+    "user": {
+      "firstName": "Name",
+      "lastName": "Last Name",
+      "birthDate": "2000-03-12",
+      "city": "City Name",
+      "country": "Country Name",
+      "email": "example@email.com",
+      "active": true
+    }
   },
   "token": "EXAMPLETOKEN@123"
 }
@@ -216,7 +226,7 @@ Example response:
       "dayOfWeek": "monday",
       "dateTime": "2023-03-13T00:00:00.000Z",
       "createdAt": "2023-03-13T00:02:31.576Z",
-      "id": "exampleID123"
+      "_id": "exampleID123"
     }
   }
 }
@@ -344,7 +354,7 @@ Example response:
 
 In case of errors in the processing of data or in searches, the response will always be in this format:
 
-# Production Mode
+Example in Production Mode:
 
 ```json
 {
@@ -353,7 +363,7 @@ In case of errors in the processing of data or in searches, the response will al
 }
 ```
 
-# Development Mode
+Example in Development Mode:
 
 ```json
 {
@@ -385,23 +395,25 @@ npm test
 Example Success Response:
 
 ```
-Events
-    /GET Events
-      ✔ Testing GET All Events (51ms)
-      ✔ Testing GET Events By Id
-      ✔ Testing GET Events By Weekday
+Users Authentication
+    /POST Users
+      ✔ Testing POST SignUp (1568ms)
+      ✔ Testing POST SignIn (1444ms)
+
+  Events
     /POST Events
-      ✔ Testing POST Create Event
+      ✔ Testing POST Create Event (129ms)
+    /GET Events
+      ✔ Testing GET All Events (136ms)
+      ✔ Testing GET Events By Id (128ms)
+      ✔ Testing GET Events By Weekday (139ms)
     /DELETE Events
-      ✔ Testing DELETE Events By Id
-      ✔ Testing DELETE Events By Weekday
+      ✔ Testing DELETE Events By Id (146ms)
+      ✔ Testing DELETE Events By Weekday (139ms)
 
   Users
-    /POST Users
-      ✔ Testing POST SignUp
-      ✔ Testing POST SignIn
     /PATCH Users
-      ✔ Testing PATCH Update Current User
+      ✔ Testing PATCH Update Current User (155ms)
     /DELETE Users
-      ✔ Testing DELETE Delete Current User
+      ✔ Testing DELETE Delete Current User (128ms)
 ```
