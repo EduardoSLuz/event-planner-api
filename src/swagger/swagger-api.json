@@ -10,8 +10,12 @@
   },
   "servers": [
     {
-      "url": "URL DEPLOY",
-      "description": ""
+      "url": "https://event-planner-api-production.up.railway.app/",
+      "description": "Production"
+    },
+    {
+      "url": "localhost:8000/api/v1",
+      "description": "Development"
     }
   ],
   "tags": [
@@ -29,10 +33,19 @@
       "get": {
         "tags": ["Events"],
         "summary": "Returns a list of events.",
-        "description": "Return all events of the DB, this funcionality only run if the user is logged",
+        "description": "Return all events bounded to a user, this funcionality only run if the user is logged, optional query parameter: dayOfWeek, to filter these events by the day of week",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dayOfWeek",
+            "description": "Query necessary to get event's by day of week",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Return a response with all events",
+            "description": "Return a response with all events bound a user",
             "content": {
               "application/json": {
                 "schema": {
@@ -42,14 +55,7 @@
             }
           },
           "404": {
-            "description": "No event found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "No event found"
           }
         },
         "x-swagger-router-controller": "Events"
@@ -57,27 +63,46 @@
       "post": {
         "tags": ["Events"],
         "summary": "Create a event",
-        "description": "Create a event with the field's required in the request body",
-        "operationId": "",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/createEvent"
+        "description": "Create a event with the field's required in the request body necessary a user loged",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Data necessary to create a event, passed by request body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "dayOfWeek": {
+                  "type": "string"
+                },
+                "dateTime": {
+                  "type": "string",
+                  "format": "yyyy-mm-ddTH:m:sZ"
+                },
+                "user": {
+                  "type": "string"
+                }
               }
             }
           }
-        },
+        ],
         "responses": {
           "201": {
             "description": "The event has been successfully registered",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventSendResponse"
+                  "$ref": "#/components/schemas/Event"
                 }
               }
             }
+          },
+          "400": {
+            "description": "Error in create a new event"
           }
         },
         "x-swagger-router-controller": "Events"
@@ -86,37 +111,23 @@
         "tags": ["Events"],
         "summary": "Delete event's based in day of week",
         "description": "Delete a event with the id passed by param, if we have a document in the DB with this id",
-        "operationId": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dayOfWeek",
+            "description": "Query necessary to delete a event by day of week",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
-            "description": "The event has been successfully deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/deleteEvent"
-                }
-              }
-            }
+            "description": "Countage of event's has been successfully deleted"
           },
           "400": {
-            "description": "No id informed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "No id informed"
           },
           "404": {
-            "description": "No event with id informed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "No event with id informed"
           }
         },
         "x-swagger-router-controller": "Events"
@@ -125,41 +136,21 @@
     "/events/:id": {
       "get": {
         "tags": ["Events"],
-        "summary": "Returns a event",
+        "summary": "Return a event",
         "description": "Return a event with the id passed by param",
-        "operationId": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of event will be find",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "The event selected",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/getEvent"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No event found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
-          },
-          "x-swagger-router-controller": "Events"
-        }
-      },
-      "delete": {
-        "tags": ["Events"],
-        "summary": "Delete a event with id",
-        "description": "Delete a document with the id passed by param",
-        "operationId": "",
-        "responses": {
-          "200": {
-            "description": "The event selected",
+            "description": "Return the event selected",
             "content": {
               "application/json": {
                 "schema": {
@@ -169,110 +160,150 @@
             }
           },
           "404": {
-            "description": "Fail No Event Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "No event found"
+          }
+        },
+        "x-swagger-router-controller": "Events"
+      },
+      "delete": {
+        "tags": ["Events"],
+        "summary": "Delete a event based in the id",
+        "description": "Delete a document with the id passed by param",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of event will be deleted",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event deleted"
           },
-          "x-swagger-router-controller": "Events"
-        }
+          "404": {
+            "description": "Fail No Event Found"
+          }
+        },
+        "x-swagger-router-controller": "Events"
       }
     },
     "/users": {
       "delete": {
         "tags": ["Users"],
-        "summary": "Delete a user",
-        "description": "This route will be used for delete the user",
-        "operationId": "",
+        "summary": "Delete the current user",
+        "description": "This route can be used for delete the user",
         "responses": {
           "200": {
-            "description": "The user has been deleted",
-            "content": "Successfuly deleted"
+            "description": "The user has been deleted"
+          },
+          "400": {
+            "description": "Error in delete the current user"
           }
         }
       },
       "patch": {
         "tags": ["Users"],
-        "summary": "Update the info of a user",
-        "description": "This route will be used to update a user",
+        "summary": "Update the info of the current user",
+        "description": "This route can be used to update a user",
         "parameters": [
           {
-            "name": "weekday",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "explode": false,
+            "in": "body",
+            "name": "body",
+            "description": "Data necessary to update a user, passed by request body",
+            "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "sunday",
-                "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday",
-                "saturday"
-              ]
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "birthDate": {
+                  "type": "string",
+                  "format": "yyyy-mm-dd"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "confirmPassword": {
+                  "type": "string"
+                }
+              }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Delete all events for that day of the week",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/updatedUser"
-                }
-              }
-            }
+            "description": "The user has been updated"
           },
           "404": {
-            "description": "Fail No Event Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "Fail in update the user"
           }
-        },
-        "x-swagger-router-controller": "Events"
+        }
       }
     },
     "/users/signUp": {
       "post": {
         "tags": ["Users"],
         "summary": "Register a user",
-        "operationId": "",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The user has been successfully registered",
-            "content": "Successfuly created"
-          },
-          "404": {
-            "description": "Fail message...",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Data necessary to create a user, passed by request body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "birthDate": {
+                  "type": "string",
+                  "format": "yyyy-mm-dd"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "confirmPassword": {
+                  "type": "string"
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user has been successfully registered"
+          },
+          "404": {
+            "description": "Fail in create a new user"
           }
         }
       }
@@ -280,31 +311,32 @@
     "/users/signIn": {
       "post": {
         "tags": ["Users"],
-        "summary": "Login with user credentials ",
-        "operationId": "",
-        "requestBody": {
-          "content": "OK"
-        },
+        "summary": "Login with a user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Data necessary to login, passed by request body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "The user has been successfully logged in",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserLoginResponse"
-                }
-              }
-            }
+            "description": "The user has been successfully logged in"
           },
           "404": {
-            "description": "Fail message...",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "Fail in login with the user credentials"
           }
         }
       }
@@ -313,29 +345,12 @@
       "get": {
         "tags": ["Users"],
         "summary": "Logout of a user",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserLoginRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "The user has been successfully logged in",
-            "content": "OK"
+            "description": "The user has been successfully logged in"
           },
           "404": {
-            "description": "Fail message...",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fail"
-                }
-              }
-            }
+            "description": "Error in logout the currente user"
           }
         }
       }
@@ -347,7 +362,7 @@
         "type": "object",
         "properties": {
           "_id": {
-            "type": "ObjectId"
+            "type": "string"
           },
           "description": {
             "type": "string"
@@ -356,15 +371,14 @@
             "type": "string"
           },
           "dateTime": {
-            "type": "Date",
+            "type": "string",
             "format": "yyyy-mm-ddTH:m:sZ"
           },
           "user": {
-            "type": "ObjectId",
-            "$ref": "#/components/schemas/User"
+            "type": "string"
           },
           "createdAt": {
-            "type": "Date",
+            "type": "string",
             "format": "yyyy-mm-ddTH:m:sZ"
           }
         }
@@ -373,7 +387,7 @@
         "type": "object",
         "properties": {
           "_id": {
-            "type": "ObjectId"
+            "type": "string"
           },
           "firstName": {
             "type": "string"
@@ -382,7 +396,7 @@
             "type": "string"
           },
           "birthDate": {
-            "type": "Date",
+            "type": "string",
             "format": "yyyy-mm-dd"
           },
           "city": {
@@ -437,14 +451,10 @@
         "type": "object",
         "$ref": "#/components/schemas/Event"
       },
-      "updatedUser": {
-        "type": "object",
-        "$ref": "#/components/schemas/User"
-      },
       "Fail": {
         "type": "object",
         "properties": {
-          "staus": {
+          "status": {
             "type": "string",
             "format": "fail"
           },

@@ -6,7 +6,6 @@ import catchAsync from '../utils/catchAsync';
 const userRouter: Router = Router();
 
 //Routes
-
 userRouter.route('/signUp').post(catchAsync(userController.signUp));
 
 userRouter.route('/signIn').post(userController.signIn);
