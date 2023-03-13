@@ -8,7 +8,7 @@ This API also has a Swagger documentation, follow the link to access it
 
 [Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/event-planner_api_challenge_two/1.0.0#/);
 
-## 📁 Deploy in Railway
+## 🔗 Deploy in Railway
 
 Application Public Domain
 
@@ -20,7 +20,7 @@ https://event-planner-api-production.up.railway.app/
 
 ### Requirements
 
-Para instalar a projeto e rodar a API, you must have installed on your device:
+To install the project and run the API, you must have installed on your device:
 
 - [Git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org)
