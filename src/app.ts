@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import express from 'express';
-import morgan from 'morgan';
 import AppError from './utils/appError';
 import globalErrorHandler from './controllers/errorController';
 import swaggerUi from 'swagger-ui-express';
@@ -20,11 +19,15 @@ export class App {
 
   // Middlewares
   private middleware() {
-    if (process.env.NODE_ENV === 'development') {
+    /* if (process.env.NODE_ENV === 'development') {
       this.server.use(morgan('dev'));
-    }
+    } */
     this.server.use(express.json());
-    this.server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+    this.server.use(
+      `${this.baseRoute}/docs`,
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerFile)
+    );
   }
 
   // Main Routes
