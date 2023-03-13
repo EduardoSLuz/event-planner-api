@@ -10,7 +10,6 @@ class EventController {
       Object.keys(req.query).length !== 0
         ? { dayOfWeek: req.query.dayOfWeek }
         : {};
-    console.log(opts);
 
     const results = await eventModel.find({
       ...opts,
