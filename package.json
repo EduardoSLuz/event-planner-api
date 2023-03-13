@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha tests/test.js",
+    "vercel-build": "npx tsc & nodemon dist/server.js",
     "start": "npx tsc & nodemon dist/server.js"
   },
   "repository": {
