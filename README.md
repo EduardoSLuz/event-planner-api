@@ -346,7 +346,7 @@ Example response:
 
 In case of errors in the processing of data or in searches, the response will always be in this format:
 
-# Production Mode
+Example in Production Mode:
 
 ```json
 {
@@ -355,7 +355,7 @@ In case of errors in the processing of data or in searches, the response will al
 }
 ```
 
-# Development Mode
+Example in Development Mode:
 
 ```json
 {
