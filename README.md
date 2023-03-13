@@ -6,7 +6,7 @@ REST API developed for CompassUOL's Node JS Challenge 2, aims to provide routes 
 
 This API also has a Swagger documentation, follow the link to access it
 
-[Swagger Documentation](https://app.swaggerhub.com/apis-docs/EduardoSLuz/event-planner_api_challenge_two/1.0.0#/);
+[Swagger Documentation]([https://app.swaggerhub.com/apis-docs/EduardoSLuz/event-planner_api_challenge_two/1.0.0#/](https://app.swaggerhub.com/apis/GGOES269/event-planner_api_challenge_two/1.0.0));
 
 ## 🔗 Deploy in Cyclic
 
