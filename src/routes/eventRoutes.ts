@@ -14,7 +14,7 @@ eventRouter.use(authcontroller.protect);
 eventRouter
   .route('/')
   .get(eventController.getEvents)
-  .delete(catchAsync(eventController.deleteEventByIdOrWeekDay)) // Verificar
+  .delete(catchAsync(eventController.deleteEventByWeekDay)) // Verificar
   .post(catchAsync(eventController.createEvent));
 
 eventRouter

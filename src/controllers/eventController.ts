@@ -57,7 +57,7 @@ class EventController {
           dayOfWeek: event.dayOfWeek,
           dateTime: event.dateTime,
           createdAt: event.createdAt,
-          id: event.id,
+          _id: event.id,
         },
       },
     });

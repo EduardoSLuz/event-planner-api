@@ -23,12 +23,12 @@ class UserController {
     const userExist = await userModel.findOne({ email });
 
     if (userExist) {
-      return next(new AppError('Email Already Exists!', 400));
+      return next(new AppError('Email Already Exists!', 401));
     }
 
     if (password !== confirmPassword) {
       return next(
-        new AppError('Confirm Password is different from Password!', 400)
+        new AppError('Confirm Password is different from Password!', 401)
       );
     }
 
@@ -51,13 +51,15 @@ class UserController {
       status: 'success',
       message: 'User created and successfully logged in!',
       data: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        birthDate: user.birthDate,
-        city: user.city,
-        country: user.country,
-        email: user.email,
-        active: user.active,
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          birthDate: user.birthDate,
+          city: user.city,
+          country: user.country,
+          email: user.email,
+          active: user.active,
+        },
       },
       token,
     });
@@ -109,7 +111,7 @@ class UserController {
   public async updateMe(req: Request, res: Response, next: NextFunction) {
     if (req.body.password || req.body.passwordConfirm) {
       return next(
-        new AppError('Its not allowed to update password by this route!', 400)
+        new AppError('Its not allowed to update password by this route!', 401)
       );
     }
 
