@@ -13,7 +13,7 @@ This API also has a Swagger documentation, follow the link to access it
 Application Public Domain
 
 ```
-https://lazy-erin-gosling-boot.cyclic.app/ap1/v1
+https://vast-pear-newt-tux.cyclic.app/
 ```
 
 ## 💻 Installing the Event Planner API
